@@ -1,5 +1,8 @@
+import Logo from './src/components/Logo';
+
+
 export default {
-  logo: <span>My Nextra Documentation</span>,
+  logo: <Logo style={{ height: '2.8rem' }} />,
   project: {
     link: 'https://github.com/shuding/nextra'
   },
