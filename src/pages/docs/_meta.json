@@ -1,0 +1,17 @@
+{
+  "index": "Introduction",
+  "in_depth": "In Depth",
+  "examples": "Examples",
+  "library_index": "Library Index",
+  "guides": "Guides",
+  "packages": "Packages",
+  "reference": "Reference",
+  "showcase": {
+    "title": "Showcase",
+    "type": "page"
+  },
+  "playground": {
+    "title": "Playground",
+    "type": "page"
+  }
+}
