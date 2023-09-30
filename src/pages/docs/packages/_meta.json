@@ -1,0 +1,5 @@
+{
+  "core": "@elemaudio/core",
+  "offline-renderer": "@elemaudio/offline-renderer",
+  "web-renderer": "@elemaudio/web-renderer"
+}
