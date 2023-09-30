@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@elemaudio/core": "^2.1.0",
+    "@elemaudio/web-renderer": "^2.1.0",
+    "@heroicons/react": "^2.0.18",
     "next": "latest",
     "nextra": "^2.13.1",
     "nextra-theme-docs": "^2.13.1",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-visibility-sensor": "^5.1.1"
   },
   "devDependencies": {
     "autoprefixer": "latest",
