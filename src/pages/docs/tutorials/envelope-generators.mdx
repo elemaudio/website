@@ -1,0 +1,256 @@
+import { AttackReleaseExample, AHDSRExample, RandomEnvelopeExample, ResumeAudioContextLink } from '@/components/EnvelopeTutorialComponents';
+
+
+export const description =
+  'An introduction generating envelope shapes, from simple to complex, with functional JavaScript in Elementary Audio.'
+
+
+# Envelope Generators
+
+In this tutorial, we'll look at algorithms for generating envelopes to add movement and character to
+sound. We'll start simple, with the classic Attack/Release envelope, then explore an approach for implementing
+the standard ADSR or ADHSR envelope, and then end with a small creative twist. Each of the algorithms we explore
+here can be extended and tweaked to form more and more complex shapes, so the ideas we cover here serve both as
+complete and useful envelopes in their own right, and as fundamental building blocks for further exploration.
+
+_Note: this tutorial is best experienced in a modern desktop browser with your keyboard available. As you read
+ahead, you'll encounter examples that activate as they scroll into view. Press the keys along the home row (a, s, d, e, f, ...)
+on your keyboard to play sounds through the example envelopes and you'll see the relevant behavior at each step.
+If you're on Safari, <ResumeAudioContextLink>click here to enable Web Audio</ResumeAudioContextLink> before proceeding
+through the examples._
+
+Before we visit our first envelope, its worth taking a moment to acknowledge that the way we approach the following
+ideas in Elementary differ from the conventional approach. Conventionally, the idea of implementing an envelope involves
+a very stateful methodology along the lines of "_for each_ sample _if_ we're in the attack phase _then_ increment our
+envelope towards 1. _if_ our envelope has reached 1 _then_ we're now in the decay phase, etc." Elementary approaches
+these ideas from a functional perspective; we're interested in finding a higher level way of describing a system that has the
+characteristics we're interested in over time. If you're already well-versed in the more conventional approach, taking the leap to the
+functional model can feel awkward. But afterwards, the simplicity with which we can describe our desired processes will
+become apparent.
+
+## Exponential Attack/Release Envelopes
+
+Let's begin with the classic exponential Attack/Release (AR) envelope: a shape which typically corresponds to two events,
+the envelope "onset" and "offset," often associated with pressing a key and then releasing it, respectively. After the
+onset (key down), the Attack/Release envelope will exponentially reaches its maximum amplitude (1) at some time T1 which is
+often set by the user, and then exponentially falls back to 0 at time T2 after the offset. The beauty of the exponential
+AR envelope is its simplicity; if we model the onset and offset events as a signal itself, which goes from 0 to 1 at the time
+of the onset and then from 1 to 0 at the time of the offset, then the AR envelope is simply a filtered version of that signal.
+Take a look at the example below, as you press the keys on your keyboard we'll see two lines plotted. In white, the onset/offset
+signal that abruptly alternates between 0 and 1, and in pink the filtered version which will match what you hear in the amplitude
+of the synthesizer you're playing.
+
+<AttackReleaseExample>
+  ```javascript
+  function renderSynthVoice(voiceState) {
+    // Each synth voice has a gate signal like this that simply
+    // alternates between 0 and 1 according to our state, `voiceState`.
+    let gate = el.const({key: `${voiceState.key}:gate`, value: voiceState.gate});
+
+    // We then use a smoothing filter to derive our Attack/Release envelope. We also
+    // install the meter here to monitor the gate signal for our plot.
+    let env = el.smooth(el.tau2pole(0.2), gate);
+
+    // Multiply our envelope in to modulate the amplitude of the detuned
+    // sawtooth pair, along with a static gain factor.
+    return el.mul(
+      0.2,
+      env,
+      el.add(
+        el.blepsaw(el.const({key: `${voiceState.key}:freq:1`, value: voiceState.freq}))),
+        el.blepsaw(el.const({key: `${voiceState.key}:freq:2`, value: voiceState.freq * 1.01}))),
+      )
+    );
+  }
+  ```
+</AttackReleaseExample>
+
+There are a few things to examine in the code above. First, note that this is only a snippet of the code that drives
+what you hear as you play the example; this `renderSynthVoice` function will be called once for each voice of the
+synthesizer (this first example has only one voice), each time the state of that voice changes. That is, when you press
+down a key on your keyboard, the voice state updates to take on a particular frequency and to take a `voiceState.gate` value
+of 1.0 indicating the onset. When you let go, the voice state updates to take on a `voiceState.gate` value of 0, indicating
+the offset. The second thing to note is how we derive `env` from `gate`: here we're using [`el.smooth`](https://www.elementary.audio/docs/reference/smooth)
+which is a simple unity-gain one-pole lowpass filter perfect for control signals like this. [`el.tau2pole`](https://www.elementary.audio/docs/reference/tau2pole)
+parameterizes our smoothing filter by mapping a constant time value (in this case, 0.2 seconds) to the relevant pole position
+for our filter (which governs how quickly the filter catches up to the input signal).
+
+Noting that this value of 0.2 seconds is chosen for taste, we could write an application that allows the end user to set a
+value they like for the speed of the envelope. Taking that one step further, we can expand on this simple example with one
+small change using [`el.select`](https://www.elementary.audio/docs/reference/select) to enable different attack and release times:
+
+```javascript
+let env = el.smooth(
+  el.select(
+    gate,
+    el.tau2pole(0.1), // For when the gate is "high" (meaning 1, our attack phase)
+    el.tau2pole(0.8), // For when the gate is "low" (meaning 0, our release phase)
+  ),
+  gate,
+);
+```
+
+## Exponential A(H)DSR Envelopes
+
+Let's now move on to a slightly more complicated example, the ADSR envelope– short for Attack, Decay, Sustain,
+and Release. This is perhaps the bread and butter of envelope generators, the classic that you'll find everywhere
+from software synths to analog synths to eurorack modules. Elementary offers an [`el.adsr`](https://www.elementary.audio/docs/reference/adsr)
+generator in the standard library, but we'll set that aside for a minute and build our own ADSR generator from scratch,
+introducing a Hold (H) phase between our attack and decay.
+
+There are several ways to generate an A(H)DSR, but within the paradigm of functional audio, this idea of filtering
+an abrupt control signal to derive a nice envelope can take us quite far. Keeping with that, then, we can build on our
+Attack/Release envelope algorithm. We can arrive at an ADSR envelope from the general structure of an AR envelope if
+we take our abrupt onset/offset signal and insert a new step: rather than toggling from 0 to 1 and then simply back to 0,
+we'll have our signal go 0 to 1 at the note onset, decrease to a value `0 <= S <= 1` some time after the onset, and then
+finally fall to 0 at the note offset. This intermediate step, run through our smoothing filter, produces the Decay phase
+which arrives at our desired Sustain level `S`. Let's see our next example and follow with some discussion on generating
+this intermediate step in our control signal.
+
+<AHDSRExample>
+  ```javascript
+  function renderSynthVoice(voiceState) {
+    // Each synth voice has a gate signal like this that simply
+    // alternates between 0 and 1 according to our state, `voiceState`.
+    let gate = el.const({key: `${voiceState.key}:gate`, value: voiceState.gate});
+
+    // Our gate drives a sequence of values that begins at 1.0 and takes a value
+    // of 0.4 exactly 800 ticks later. The sequence resets to the beginning on the
+    // rising edge (i.e. 0 -> 1) of the gate, or, on every note onset.
+    let seq = el.sparseq({key: `${voiceState.key}:seq`, seq: [
+      { value: 1, tickTime: 0 },
+      { value: 0.4, tickTime: 800 },
+    ]}, el.train(1000), gate);
+
+    // We then use a smoothing filter to derive our Attack/Release envelope. We also
+    // install the meter here to monitor the gate signal for our plot. Note here
+    // that we've also multiplied the gate with the seq above.
+    let env = el.smooth(el.tau2pole(0.1), el.meter({name: 'gate'}, el.mul(gate, seq)));
+
+    // Multiply our envelope in to modulate the amplitude of the detuned
+    // sawtooth pair, along with a static gain factor.
+    return el.mul(
+      0.2,
+      env,
+      el.add(
+        el.blepsaw(el.const({key: `${voiceState.key}:freq:1`, value: voiceState.freq}))),
+        el.blepsaw(el.const({key: `${voiceState.key}:freq:2`, value: voiceState.freq * 1.01}))),
+      )
+    );
+  }
+  ```
+</AHDSRExample>
+
+Notice as you play with the example above how the envelope generator starts with the same abrupt
+transition from 0 to 1 that gets smoothed out into an exponential attack. Exactly 800ms after the
+note onset, the control signal steps abruptly to 0.4, which gets smoothed out into our decay phase.
+From there, as you continue holding the note the synth voice remains at 0.4 amplitude, our sustain
+phase. Finally, upon the release of the key, we abruptly step to 0 and smooth into our release phase.
+
+As you can see, the principles of the original AR envelope apply directly to the A(H)DSR. The primary
+difference is generating the precisely timed step from 1 to `S`, which we accomplish here using
+[`el.sparseq`](https://www.elementary.audio/docs/reference/sparseq), though really the idea could be
+accomplished using various other means of precisely sequencing values, such as [`el.seq2`](https://www.elementary.audio/docs/reference/seq2) or
+[`el.table`](https://www.elementary.audio/docs/reference/table).
+
+Now, so far, we haven't been very clear about the Hold (H) portion of this envelope, and indeed this
+part becomes clear when we start to think about parameterizing the filter speed for the various phases
+of the envelope as we did with the AR envelope above. In the same way that we saw before, we can adjust
+the timing of each phase using different time coefficients for `el.smooth`, and perhaps the simplest
+way to do that would be to just sequence those timing coefficients as well.
+
+```javascript
+// This sequence governs our control signal to be filtered
+let seq = el.sparseq({seq: [
+  { value: 1, tickTime: 0 },
+  { value: 0.4, tickTime: 800 },
+]}, el.train(1000), gate);
+
+// This sequence governs the time coefficient to apply to the
+// smoothing filter itself
+let tc = el.sparseq({seq: [
+  { value: 0.1, tickTime: 0 },
+  { value: 0.2, tickTime: 800 },
+], el.train(1000), gate);
+
+let env = el.smooth(
+  el.select(
+    gate,
+    el.tau2pole(tc), // For our attack / decay phases
+    el.tau2pole(0.4), // For our release phase
+  ),
+  el.mul(gate, seq),
+);
+```
+
+Viewed this way, we can see that there are actually a few things to parameterize now, and we can
+assign them as we like or provide controls for the end user to tune them. The Hold
+phase that we've been discussing comes from tuning the coefficient of the smoothing filter for the
+attack phase relative to the time at which the control signal falls to the sustain value.
+Here it's helpful to understand the notion of the [Time Constant](https://en.wikipedia.org/wiki/Time_constant)
+as it relates to `el.tau2pole`. If we want an attack phase of 100ms, then we need to derive a time constant
+with the understanding that the time constant in `tau2pole` expresses the time taken to reach ~63.2% of
+its target value. A helpful rule of thumb here is `timeConstant = desiredTimeInSeconds / 6.9`, thus for an attack
+phase of 100ms, we should set a time constant of `~0.01449`. With this in mind, if we want an explicit
+hold phase before the decay, we need to ensure that our attack coefficient resolves to the target 1.0 _before_
+the control signal drops to our sustain value. _How far_ before governs the duration of our hold period.
+
+## Getting Creative
+
+Now that we've got the fundamental algorithms under our belt, let's have a little fun. By now, hopefully
+you can see that we have a ton of room to experiment. For one, we could create sequences of totally arbitrary
+values, perhaps drawn by a user in a breakpoint function plot popularized by synths like Xfer Records' Serum.
+We could remove the smoothing filter and use a more high-resolution sequence of values to create abrupt edges
+when we want them, or we could swap a slew limiter in place of our `el.smooth` nodes for linear ramps to the
+target values (slew limiting will be added to the Elementary core library in a forthcoming update).
+
+We'll generally leave these ideas as exercises for the reader, but finish with one final example. In this
+last example, we've enabled polyphony on the synthesizer so you will see four envelope shapes on the plot
+as you press multiple keys. We'll keep the shape of our A(H)DSR envelope, but on each keypress we'll generate
+a random time constant for the smoothing filter, and use that same value to derive random sustain levels and
+random hold times. The result is an unpredictable polyphonic synth that's as fun to play as it is to watch.
+
+<RandomEnvelopeExample>
+  ```javascript
+  function renderSynthVoice(voiceState) {
+    // Each synth voice has a gate signal like this that simply
+    // alternates between 0 and 1 according to our state, `voiceState`.
+    let gate = el.const({key: `${voiceState.key}:gate`, value: voiceState.gate});
+
+    // Our gate drives a sequence of values that begins at 1.0 and takes a random
+    // value assigned to the voice during voice allocation at a random time determined
+    // by the same value. The sequence resets to the beginning on the
+    // rising edge (i.e. 0 -> 1) of the gate, or, on every note onset.
+    let seq = el.sparseq({key: `${voiceState.key}:seq`, seq: [
+      { value: 1, tickTime: 0 },
+      { value: voiceState.tc, tickTime: 50 + voiceState.tc * 250 },
+    ]}, el.train(1000), gate);
+
+    // We then use a smoothing filter to derive our Attack/Release envelope with our
+    // random time constant variable `voiceState.tc`. We also
+    // install the meter here to monitor the gate signal for our plot. Note here
+    // that we've also multiplied the gate with the seq above.
+    let env = el.smooth(
+      el.tau2pole(el.const({key: `${voiceState.key}:tc`, value: voiceState.tc})),
+      el.meter({name: `${voiceState.key}:gate`}, el.mul(gate, seq)),
+    );
+
+    // Multiply our envelope in to modulate the amplitude of the detuned
+    // sawtooth pair, along with a static gain factor.
+    return el.mul(
+      0.2,
+      env,
+      el.add(
+        el.blepsaw(el.const({key: `${voiceState.key}:freq:1`, value: voiceState.freq}))),
+        el.blepsaw(el.const({key: `${voiceState.key}:freq:2`, value: voiceState.freq * 1.01}))),
+      )
+    );
+  }
+  ```
+</RandomEnvelopeExample>
+
+Thanks for reading! The full code listing for the examples in this tutorial, including the full synthesizer, are
+available [here as a GitHub Gist](https://gist.github.com/nick-thompson/8794dc9c01147850ed5cf4b286f00b3e).
+The code listings under each example here have been slightly simplified for clarity. If you liked this tutorial,
+help us spread the word by [sharing on Twitter](https://twitter.com/intent/tweet?text=Envelope%20Generators%20in%20JavaScript%20with%20%40elemaudio%3A%20https%3A%2F%2Fwww.elementary.audio%2Ftutorials%2Fenvelope-generators)
+or join the [Elementary Audio community on Discord](https://discord.gg/xSu9JjHwYc).

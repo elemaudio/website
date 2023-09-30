@@ -1,0 +1,170 @@
+import { Example01, Example02, Example03 } from '@/components/DistortionTutorialComponents';
+
+
+export const description =
+  'An introduction to saturation and wave shaping distortion in JavaScript with Elementary Audio';
+
+# Distortion, Saturation, and Wave Shaping
+
+Saturation is a type of distortion that we can emulate in the digital
+domain through the application of a stateless transfer function (or shaper
+function, wave shaper) to an incoming audio signal. The notion of
+saturation typically comes from analog hardware, where for example, the
+hardware components (i.e. tubes, valves) of various amplifiers would subtly
+and gradually deform at large voltages. Therefore the types of transfer
+functions we're interested in for simulating saturation are those which
+approximate the identity function, `y(x) = x`, near the origin, and which
+gradually and nonlinearly taper as they approach the limits of the signal
+domain, i.e. `[-1.0, 1.0]` for floating point signals.
+
+The classic choice of such a transfer function for applying saturation
+in DSP is `y(x) = tanh(g * x)`, which we parameterize through choice of `g` to
+amplify or drive the signal `x` into the nonlinear regions of the tanh curve.
+
+<Example01>
+```js
+export function playEx01(sliderValue) {
+  let vs = el.sm(el.const({key: 'ex1:mix', value: sliderValue * 4}));
+  let gs = el.sm(el.const({key: 'ex1:gain', value: (1.2 - Math.sqrt(sliderValue))}));
+
+  let dry = el.mul(vs, el.cycle(440));
+  let wet = el.tanh(dry);
+
+  core.render(
+    el.mul(gs, wet),
+    el.mul(gs, wet),
+  )
+}
+```
+</Example01>
+
+Notice in the example above how near the upper limit of `g` the output
+sine tone starts to resemble a square wave. A square wave is composed of a fundamental
+tone plus a series of odd harmonics on top of that fundamental. A nonlinear transfer function
+which is perfectly symmetric about the origin, such as `y(x) = tanh(g * x)` will
+impart odd harmonics on the output signal, hence the square wave resemblance. Introducing asymmetry here,
+either in the transfer function or in the input signal itself before it
+visits the saturator, will start to yield even harmonics as well.
+
+The character of a saturator is in large part due to the balance of
+harmonics produced by the transfer function, so it's worth spending time
+exploring various functions and means of introducing asymmetry to your
+input signal. Filtering, whether before or after the saturation step, is
+also integral to the process of building a nice saturation process. It's
+important to understand that, because these transfer functions are
+stateless, their output depends exactly on the input given, so
+pre-filtering the input signal can have just as significant a role in
+shaping the overall character as can post-filtering. Let's put these ideas
+together into a larger, cohesive example.
+
+<Example02>
+```js
+export function playEx02(sliderValue) {
+  let t = el.train(0.25);
+  let sl = el.sample({path: '96_Gm_MelodicSynth_01_592.wav:0'}, t);
+  let sr = el.sample({path: '96_Gm_MelodicSynth_01_592.wav:1'}, t);
+
+  let dl = el.mul(0.75, sl);
+  let dr = el.mul(0.75, sr);
+
+  let wl = el.mul(0.25, el.tanh(el.mul(10, el.lowpass(1800, 0.4, sl))));
+  let wr = el.mul(0.25, el.tanh(el.mul(10, el.lowpass(1800, 0.4, sr))));
+
+  let vs = el.sm(el.const({key: 'ex2:mix', value: sliderValue}));
+
+  core.render(
+    el.scope(el.select(vs, wl, dl)),
+    el.select(vs, wl, dl),
+  );
+}
+```
+</Example02>
+
+While saturation refers to a type or a subset of distortion, wave shaping
+refers to a process or a technique for applying distortion, through the use
+of a stateless transformation. All of the prior discussion on saturation
+transfer functions (or shaper functions) can therefore be referred to as
+wave shaping.
+
+To elaborate further on technique then, we turn our discussion to lookup
+tables, which open the door to all kinds of highly complex transfer
+functions. Notice in the last example that we compute a polynomial for each
+sample of the input signal. For complicated polynomials or expensive
+trigonometric functions, this can become an expensive processing task.
+Historically, this detail gave way to the use of lookup tables to
+precompute the expensive functions for various input values so that, while
+processing our audio, all we need to do is lookup the correct output value
+given an input value. In modern DSP, this still holds for improving
+computational efficiency, but it also allows us to push incredibly complex
+functions into our distortion algorithms.
+
+We'll wrap up our tutorial here with one final demonstration, using
+Elementary's `el.table` to implement a complicated, lookup-table based wave
+shaping distortion. Because `el.table` is read with a position value on the
+range `[0, 1]`, we'll see that we can simply map our input signal from its
+typical `[-1, 1]` range onto `[0, 1]` and fill our lookup table such that the
+origin is represented in the middle of our data table. Finally, we'll pull
+in our prior discussion and use some bias and filtering to define the
+character of our distortion.
+
+<Example03>
+```js
+export function playEx03(sliderValue) {
+  let t = el.train(0.25);
+
+  // Our left and right channel sample playback
+  let sl = el.sample({path: '96_Gm_MelodicSynth_01_592.wav:0'}, t);
+  let sr = el.sample({path: '96_Gm_MelodicSynth_01_592.wav:1'}, t);
+
+  // Here we construct a piecewise waveshaper function with:
+  //   f(x), x >= 0 : tanh(x)
+  //   f(x), x <  0 : tanh(sinh(x)) - 0.2 * x * sin(pi * x)
+  let table = (new Float32Array(513)).fill(0);
+
+  for (let i = 0; i < 256; ++i) {
+    let leftX = (256 - i) / -256;
+    let rightX = i / 256;
+
+    table[257 + i] = Math.tanh(rightX);
+    table[i] = Math.tanh(Math.sinh(leftX)) - 0.3 * leftX * Math.sin(Math.PI * leftX * 2);
+  }
+
+  // Update our virtual file system. Typically you would do this only once ahead of time,
+  // but for the sake of our example we'll do it here
+  core.updateVirtualFileSystem({
+    '/waveshaper/asym1': table,
+  });
+
+  // Our pre-distortion left and right channels. We drive the dry signals so that they'll
+  // hit the nonlinear parts of our curve. We pre-filter with a subtle lowpass, and we sweep
+  // a slow DC offset (bias) to push the signal into different regions of the wave shaper.
+  let dl = el.add(el.mul(0.1, el.cycle(1)), el.mul(10, el.smooth(0.6, sl)));
+  let dr = el.add(el.mul(0.1, el.cycle(1)), el.mul(10, el.smooth(0.6, sr)));
+
+  // Now we map our signal through the waveshaping table to derive our wet signals. We
+  // use a DC blocker to remove any lingering DC component, then gain down to a reasonable
+  // volume
+  let wl = el.mul(0.2, el.dcblock(el.table({path: '/waveshaper/asym1'}, el.mul(0.5, el.add(1, dl)))));
+  let wr = el.mul(0.2, el.dcblock(el.table({path: '/waveshaper/asym1'}, el.mul(0.5, el.add(1, dr)))));
+
+  let vs = el.sm(el.const({key: 'ex3:mix', value: sliderValue}));
+
+  core.render(
+    el.scope(el.select(vs, wl, sl)),
+    el.select(vs, wr, sr),
+  );
+}
+```
+</Example03>
+
+At this point, hopefully you've learned enough to jumpstart your own
+exploration into the broad world of saturation, wave shaping, and distortion.
+The last detail to leave with, then, is a small caution that wave shaping can
+have drastic and sometimes undesirable results. If the result of applying the
+transformation is an output signal with discontinuities or drastically sharp
+edges, you will likely encounter aliasing, which we often aim to avoid. This is
+an entire topic on its own, but if you're interested you can read on in
+[Introduction to Oversampling for Alias Reduction](https://www.nickwritesablog.com/introduction-to-oversampling-for-alias-reduction/).
+
+If you have any questions, comments, or want to share your own take on
+saturation and distortion, [join our Discord community!](https://discord.gg/xSu9JjHwYc)
