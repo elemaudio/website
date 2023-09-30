@@ -10,4 +10,12 @@ export default {
     link: 'https://discord.com',
   },
   // ... other theme options
+  primaryHue: {
+    dark: 329,
+    light: 329,
+  },
+  primarySaturation: {
+    dark: 89,
+    light: 89,
+  },
 }
