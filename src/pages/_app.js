@@ -1,8 +1,12 @@
 import '../styles/globals.css';
 
+import { RenderContextProvider } from '@/lib/RenderContext';
+
 
 export default function App({ Component, pageProps }) {
   return (
-    <Component {...pageProps} />
+    <RenderContextProvider>
+      <Component {...pageProps} />
+    </RenderContextProvider>
   );
 }
