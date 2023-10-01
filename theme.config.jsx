@@ -17,6 +17,12 @@ export default {
     dark: 89,
     light: 89,
   },
+  editLink: {
+    text: null,
+  },
+  feedback: {
+    content: null,
+  },
   footer: {
     text: (
       <span>
