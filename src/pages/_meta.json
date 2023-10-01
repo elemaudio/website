@@ -17,6 +17,9 @@
   },
   "playground": {
     "title": "Playground",
-    "type": "page"
+    "type": "page",
+    "theme": {
+      "layout": "raw"
+    }
   }
 }
