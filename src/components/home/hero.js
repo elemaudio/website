@@ -8,7 +8,7 @@ let clipPath = Array.from({length: 24})
 export function Hero() {
   return (
     <div className="relative w-full h-full">
-      <div class="absolute isolate left-0 top-0 w-full h-full blur-3xl">
+      <div className="absolute isolate left-0 top-0 w-full h-full blur-3xl">
         <div className="relative w-full h-full bg-gradient-to-br from-transparent to-pink-300" style={{clipPath: `polygon(${clipPath}`}}/>
       </div>
       <div className="isolate mx-auto max-w-2xl py-48">
