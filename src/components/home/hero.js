@@ -32,11 +32,10 @@ export function Hero() {
       <div className="isolate mx-auto max-w-2xl py-48">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-6xl">
-            Data to enrich your online business
+            Reimagine the way you write audio software
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
-            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet
-            fugiat veniam occaecat fugiat aliqua.
+          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            Elementary is a library for building high performance, portable audio applications with functional, declarative JavaScript.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
@@ -48,7 +47,7 @@ export function Hero() {
             <Link
               onClick={stopProp}
               href="/playground"
-              className="text-sm font-semibold leading-6 text-gray-900">
+              className="text-sm font-semibold leading-6 text-gray-800 dark:text-gray-100 dark:hover:text-gray-200 hover:text-gray-900">
               Try now <span aria-hidden="true">→</span>
             </Link>
           </div>
