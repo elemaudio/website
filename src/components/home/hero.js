@@ -25,7 +25,9 @@ export function Hero() {
   return (
     <div className="relative w-full h-full" onClick={onClick}>
       <div className="absolute isolate left-0 top-0 w-full h-full blur-3xl">
-        <div className="relative w-full h-full bg-gradient-to-br opacity-100 dark:opacity-40 from-fuchsia-300 to-pink-300" style={{clipPath: `polygon(${clipPath}`}}/>
+        <div
+          className="relative w-full h-full bg-gradient-to-br opacity-100 dark:opacity-40 from-fuchsia-300 to-pink-300"
+          style={{transition: 'clip-path 1s', clipPath: `polygon(${clipPath}`}} />
       </div>
       <div className="isolate mx-auto max-w-2xl py-48">
         <div className="text-center">
