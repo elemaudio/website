@@ -1,5 +1,6 @@
 import {
   PlayIcon,
+  PauseIcon,
   ArrowPathIcon,
   ArrowUpOnSquareIcon,
   CommandLineIcon,
@@ -18,6 +19,7 @@ function Button(props) {
 
 export function Controls(props) {
   const {
+    isRunning,
     onPlayPause,
     onRestart,
     onShare,
@@ -28,7 +30,10 @@ export function Controls(props) {
     <div className="h-full flex">
       <div className="flex-1 flex items-center px-5">
         <Button onClick={onPlayPause}>
-          <PlayIcon className="h-5 w-5" />
+          {(isRunning
+            ? <PauseIcon className="h-5 w-5" />
+            : <PlayIcon className="h-5 w-5" />
+          )}
         </Button>
         <Button onClick={onRestart}>
           <ArrowPathIcon className="h-5 w-5" />
@@ -38,9 +43,9 @@ export function Controls(props) {
         </Button>
       </div>
       <div className="flex-1 flex items-center px-5">
-        <div className="flex items-center py-2">
+        <div className="flex items-center py-2 text-gray-700 dark:text-gray-500">
           <CommandLineIcon className="h-5 w-5" />
-          <span className="px-2">Ok!</span>
+          <span className="px-2">{statusMessage}</span>
         </div>
       </div>
     </div>
