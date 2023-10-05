@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.el__full-height {
+  height: calc(100vh - var(--nextra-navbar-height));
+  min-height: calc(100vh - var(--nextra-navbar-height));
+  max-height: calc(100vh - var(--nextra-navbar-height));
+}

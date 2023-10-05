@@ -12,19 +12,19 @@ function onChange(editorContent) {
 
 export function Playground() {
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="el__full-height w-full flex flex-col">
       <div className="flex-0 flex">
-        <div className="h-[72vh] flex-1">
+        <div className="h-[78vh] flex-1">
           <Editor
             className="w-full"
-            height="72vh"
+            height="78vh"
             theme="vs-dark" // or "light"
             options={{ minimap: { enabled: false }}}
             onChange={onChange}
             defaultLanguage="javascript"
             defaultValue={defaultEditorValue} />
         </div>
-        <div className="h-[72vh] flex-1 bg-slate-300" />
+        <div className="h-[78vh] flex-1 bg-slate-300" />
       </div>
       <div className="flex-1">
         <Controls />
