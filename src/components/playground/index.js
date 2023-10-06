@@ -6,6 +6,7 @@ import { RenderContext } from '@/lib/RenderContext';
 import { useRouter } from 'next/router';
 import { defaultEditorValue, awaitImportScript, importMapScript } from './constants';
 import { Controls } from './controls';
+import { InfoPanel } from './info';
 
 
 async function runUserCode(renderContext, code) {
@@ -62,6 +63,13 @@ export function Playground() {
     if (!renderContext.audioContext)
       return;
 
+    if (isRunning) {
+      await renderContext.audioContext.suspend();
+      // TODO: just one `setStatus`? Which includes { running, message }
+      setRunning(false);
+      return setStatusMessage('Not running');
+    }
+
     if (renderContext.audioContext.state === 'suspended') {
       await renderContext.audioContext.resume();
     }
@@ -74,7 +82,7 @@ export function Playground() {
 
     setRunning(true);
     setStatusMessage(formatStats(res.stats));
-  }, [renderContext, editorValue]);
+  }, [renderContext, isRunning, editorValue]);
 
   const onChange = useCallback(async (editorContent) => {
     if (!isRunning)
@@ -86,8 +94,9 @@ export function Playground() {
       return setStatusMessage(res.errorMessage);
     }
 
+    setEditorValue(editorContent);
     setStatusMessage(formatStats(res.stats));
-  }, [isRunning, editorValue]);
+  }, [renderContext, isRunning, editorValue]);
 
   return (
     <div className="el__full-height w-full flex flex-col">
@@ -107,7 +116,9 @@ export function Playground() {
             onChange={onChange}
             value={editorValue} />
         </div>
-        <div className="h-[78vh] flex-1 bg-slate-300" />
+        <div className="h-[78vh] flex-1">
+          <InfoPanel />
+        </div>
       </div>
       <div className="flex-1">
         <Controls

@@ -28,7 +28,7 @@ export function Controls(props) {
 
   return (
     <div className="h-full flex">
-      <div className="flex-1 flex items-center px-5">
+      <div className="flex-0 w-1/2 flex items-center px-5">
         <Button onClick={onPlayPause}>
           {(isRunning
             ? <PauseIcon className="h-5 w-5" />
@@ -42,7 +42,7 @@ export function Controls(props) {
           <ArrowUpOnSquareIcon className="h-5 w-5" />
         </Button>
       </div>
-      <div className="flex-1 flex items-center px-5">
+      <div className="flex-0 w-1/2 flex items-center px-4">
         <div className="flex items-center py-2 text-gray-700 dark:text-gray-500">
           <CommandLineIcon className="h-5 w-5" />
           <span className="px-2">{statusMessage}</span>
