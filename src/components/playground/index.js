@@ -75,27 +75,18 @@ export function Playground() {
     }
 
     let res = await runUserCode(renderContext, editorValue);
-
-    if (!res.ok) {
-      return setStatusMessage(res.errorMessage);
-    }
-
+    setStatusMessage(res.ok ? formatStats(res.stats) : res.errorMessage);
     setRunning(true);
-    setStatusMessage(formatStats(res.stats));
   }, [renderContext, isRunning, editorValue]);
 
   const onChange = useCallback(async (editorContent) => {
+    setEditorValue(editorContent);
+
     if (!isRunning)
       return;
 
     let res = await runUserCode(renderContext, editorContent);
-
-    if (!res.ok) {
-      return setStatusMessage(res.errorMessage);
-    }
-
-    setEditorValue(editorContent);
-    setStatusMessage(formatStats(res.stats));
+    setStatusMessage(res.ok ? formatStats(res.stats) : res.errorMessage);
   }, [renderContext, isRunning, editorValue]);
 
   return (
