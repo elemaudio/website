@@ -49,6 +49,7 @@
   "smooth": "el.smooth",
   "snapshot": "el.snapshot",
   "sparseq": "el.sparseq",
+  "sphasor": "el.sphasor",
   "square": "el.square",
   "sr": "el.sr",
   "svf": "el.svf",
