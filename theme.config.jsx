@@ -23,6 +23,11 @@ export default {
   feedback: {
     content: null,
   },
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s – Elementary Audio'
+    }
+  },
   head() {
     let descrip = `Elementary is a library for building high performance, portable audio applications with functional, declarative JavaScript.`;
 
