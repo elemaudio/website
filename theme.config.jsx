@@ -23,6 +23,21 @@ export default {
   feedback: {
     content: null,
   },
+  head() {
+    let descrip = `Elementary is a library for building high performance, portable audio applications with functional, declarative JavaScript.`;
+
+    return (
+      <>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content={descrip} />
+
+        <meta property="og:image" content="https://www.elementary.audio/logo.png" />
+        <meta property="og:description" content={descrip} />
+
+        <script defer data-domain="elementary.audio" src="https://plausible.io/js/script.js"></script>
+      </>
+    );
+  },
   footer: {
     text: (
       <span>
