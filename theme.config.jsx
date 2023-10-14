@@ -1,5 +1,7 @@
 import Logo from './src/components/Logo';
 
+import { useRouter } from 'next/router';
+
 
 export default {
   logo: <Logo style={{ height: '2.8rem' }} />,
@@ -24,8 +26,12 @@ export default {
     content: null,
   },
   useNextSeoProps() {
+    const { asPath } = useRouter();
+
     return {
-      titleTemplate: '%s – Elementary Audio'
+      titleTemplate: (['/', '/docs'].includes(asPath)
+        ? 'Elementary Audio'
+        : '%s – Elementary Audio'),
     }
   },
   head() {
