@@ -37,7 +37,7 @@ export function Playground() {
     if (!renderContext.audioContext)
       return;
 
-    let ri = new Runtime(renderContext.audioContext, '2.1.0');
+    let ri = new Runtime(renderContext.audioContext, '3.0.0');
 
     ri.init().then(() => {
       setRuntimeInstance(ri);

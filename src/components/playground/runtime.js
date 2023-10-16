@@ -1,5 +1,5 @@
 export class Runtime {
-  constructor(audioContext, version = '2.1.0') {
+  constructor(audioContext, version = '3.0.0') {
     this.ctx = audioContext;
     this.version = version;
     this.core = null;
