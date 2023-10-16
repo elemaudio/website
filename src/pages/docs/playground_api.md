@@ -27,7 +27,7 @@ on the Playground to rerun the initialization steps.
 ```js
 async getVirtualFileSystem(decodeAudioData) {
   let res = await fetch('https://ia800407.us.archive.org/9/items/999WavFiles/10.mp3');
-  let sampleBuffer = await decodeAudioData(res.arrayBuffer());
+  let sampleBuffer = await decodeAudioData(await res.arrayBuffer());
 
   return {
     'ten:0': sampleBuffer.getChannelData(0),
