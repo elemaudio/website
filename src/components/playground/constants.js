@@ -7,6 +7,10 @@
 // reason we have to use an actual <script> tag with dangerouslySetInnerHTML, rather
 // than next/script (which will also try to bundle and optimize).
 export const awaitImportScript = `
+window.awaitImport = async function awaitImport(url) {
+  return await import(url);
+}
+
 window.awaitImportInline = async function awaitImportInline(code) {
   const blob = new Blob([code], { type: 'text/javascript' });
   const url = URL.createObjectURL(blob);

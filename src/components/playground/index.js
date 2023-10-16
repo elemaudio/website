@@ -3,44 +3,13 @@ import Editor from '@monaco-editor/react';
 import Head from 'next/head';
 
 import { RenderContext } from '@/lib/RenderContext';
+import { Runtime } from './runtime';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { defaultEditorValue, awaitImportScript, importMapScript } from './constants';
 import { Controls } from './controls';
 import { InfoPanel } from './info';
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
 
-
-async function runUserCode(renderContext, code) {
-  try {
-    const userModule = await window.awaitImportInline(code);
-
-    // Unpack user exports
-    const { getVirtualFileSystem, render } = userModule.default;
-
-    if (typeof getVirtualFileSystem === 'function') {
-      // yaya
-    }
-
-    // Run main
-    if (typeof render !== 'function')
-      throw new Error('Missing render function on default export');
-
-    const userOutput = render({});
-    const stats = Array.isArray(userOutput)
-      ? renderContext.renderer.render(...userOutput)
-      : renderContext.renderer.render(userOutput, userOutput);
-
-    return {
-      ok: true,
-      stats,
-    };
-  } catch (e) {
-    return {
-      ok: false,
-      errorMessage: e.message,
-    };
-  }
-}
 
 function formatStats(stats) {
   const {
@@ -61,6 +30,19 @@ export function Playground() {
   const [statusMessage, setStatusMessage] = useState("Not running");
   const [shareMessage, setShareMessage] = useState("");
   const [editorValue, setEditorValue] = useState(defaultEditorValue.trim());
+  const [runtime, setRuntimeInstance] = useState(null);
+
+  // Mount the runtime
+  useEffect(() => {
+    if (!renderContext.audioContext)
+      return;
+
+    let ri = new Runtime(renderContext.audioContext, '2.1.0');
+
+    ri.init().then(() => {
+      setRuntimeInstance(ri);
+    });
+  }, [renderContext.audioContext]);
 
   // Handle query param routing
   useEffect(() => {
@@ -80,7 +62,7 @@ export function Playground() {
   }, [queryString.get('version'), queryString.get('code')]);
 
   const onPlayPause = useCallback(async (e) => {
-    if (!renderContext.audioContext)
+    if (!renderContext.audioContext || !runtime)
       return;
 
     if (isRunning) {
@@ -94,20 +76,20 @@ export function Playground() {
       await renderContext.audioContext.resume();
     }
 
-    let res = await runUserCode(renderContext, editorValue);
+    let res = await runtime.runUserCode(editorValue, true);
     setStatusMessage(res.ok ? formatStats(res.stats) : res.errorMessage);
     setRunning(true);
-  }, [renderContext, isRunning, editorValue]);
+  }, [renderContext, runtime, isRunning, editorValue]);
 
   const onChange = useCallback(async (editorContent) => {
     setEditorValue(editorContent);
 
-    if (!isRunning)
+    if (!isRunning || !runtime)
       return;
 
-    let res = await runUserCode(renderContext, editorContent);
+    let res = await runtime.runUserCode(editorContent);
     setStatusMessage(res.ok ? formatStats(res.stats) : res.errorMessage);
-  }, [renderContext, isRunning, editorValue]);
+  }, [runtime, isRunning, editorValue]);
 
   const onShare = useCallback(async (e) => {
     try {
