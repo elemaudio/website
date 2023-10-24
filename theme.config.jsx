@@ -102,7 +102,7 @@ export default {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content={descrip} />
 
-        <meta property="og:image" content="https://www.elementary.audio/logo.png" />
+        <meta property="og:image" content="https://www.elementary.audio/og.jpg" />
         <meta property="og:description" content={descrip} />
 
         <script defer data-domain="elementary.audio" src="https://plausible.io/js/script.js"></script>
