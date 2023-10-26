@@ -20,7 +20,7 @@ window.awaitImportInline = async function awaitImportInline(code) {
 `;
 
 export const importMapScript = `
-  { "imports": { "@elemaudio/core": "https://cdn.skypack.dev/@elemaudio/core" } }
+  { "imports": { "@elemaudio/core": "https://cdn.skypack.dev/@elemaudio/core@3.0.0" } }
 `;
 
 export const defaultEditorValue = `
