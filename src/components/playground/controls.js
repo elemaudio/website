@@ -46,10 +46,10 @@ export function Controls(props) {
           <span className="text-sm text-pink-400">{shareMessage}</span>
         )}
       </div>
-      <div className="flex-0 w-1/2 flex items-center px-4">
-        <div className="flex items-center py-2 text-gray-700 dark:text-gray-500">
+      <div className="flex-0 w-1/2 max-w-1/2 flex items-center px-4">
+        <div className="flex-1 max-w-full flex items-center py-2 text-gray-700 dark:text-gray-500">
           <CommandLineIcon className="h-5 w-5" />
-          <span className="px-2">{statusMessage}</span>
+          <span className="px-2 flex-1 truncate">{statusMessage}</span>
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@ function formatStats(stats) {
     propsWritten,
   } = stats;
 
-  return `Ok (${elapsedTimeMs}ms A${nodesAdded} E${edgesAdded} P${propsWritten})`;
+  return `Ok (${elapsedTimeMs.toFixed(2)}ms). Nodes: ${nodesAdded}, Edges: ${edgesAdded},  Props: ${propsWritten}`;
 }
 
 export function Playground() {
