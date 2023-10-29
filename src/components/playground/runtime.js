@@ -1,5 +1,9 @@
+export function getImportMapScript(version) {
+  return `{ "imports": { "@elemaudio/core": "https://cdn.skypack.dev/@elemaudio/core@~${version}" } }`;
+}
+
 export class Runtime {
-  constructor(audioContext, version = '3.0.0') {
+  constructor(audioContext, version) {
     this.ctx = audioContext;
     this.version = version;
     this.core = null;
@@ -7,7 +11,7 @@ export class Runtime {
   }
 
   async init() {
-    const pkg = await window.awaitImport(`https://cdn.skypack.dev/@elemaudio/web-renderer@${this.version}`);
+    const pkg = await window.awaitImport(`https://cdn.skypack.dev/@elemaudio/web-renderer@~${this.version}`);
     const WebRenderer = pkg.default;
 
     this.core = new WebRenderer();

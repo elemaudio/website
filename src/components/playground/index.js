@@ -3,7 +3,7 @@ import Editor from '@monaco-editor/react';
 import Head from 'next/head';
 
 import { RenderContext } from '@/lib/RenderContext';
-import { Runtime } from './runtime';
+import { getImportMapScript, Runtime } from './runtime';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { defaultEditorValue, awaitImportScript, importMapScript } from './constants';
 import { Controls } from './controls';
@@ -113,7 +113,7 @@ export function Playground() {
       <Head>
         <meta name="robots" content="noindex,nofollow" />
         <script dangerouslySetInnerHTML={{ __html: awaitImportScript }} />
-        <script type="importmap" dangerouslySetInnerHTML={{ __html: importMapScript }} />
+        <script type="importmap" dangerouslySetInnerHTML={{ __html: getImportMapScript('3.0.0') }} />
       </Head>
       <div className="flex-0 flex">
         <div className="h-[78vh] flex-1">
