@@ -5,13 +5,5 @@
   "tutorials": "Tutorials",
   "packages": "Packages",
   "playground_api": "Playground API",
-  "reference": "Reference",
-  "showcase": {
-    "title": "Showcase",
-    "type": "page"
-  },
-  "playground": {
-    "title": "Playground",
-    "type": "page"
-  }
+  "reference": "Reference"
 }
