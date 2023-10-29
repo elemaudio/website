@@ -29,7 +29,7 @@ export function Hero() {
           className="relative w-full h-full bg-gradient-to-br opacity-100 dark:opacity-40 from-fuchsia-300 to-pink-300"
           style={{transition: 'clip-path 1s', clipPath: `polygon(${clipPath}`}} />
       </div>
-      <div className="isolate mx-auto max-w-2xl py-48">
+      <div className="isolate mx-auto max-w-2xl px-4 py-48">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-6xl">
             Rethink your audio software stack
