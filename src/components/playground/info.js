@@ -8,7 +8,7 @@ export function InfoPanel({outdatedBrowser}) {
       <h2 className="text-3xl font-bold">Elementary Playground</h2>
       {outdatedBrowser && (
         <Callout type="error">
-          Update your browser to try Elementary. The playground uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#importing_modules_using_import_maps" target="_blank">import maps</a>, a relatively new browser feature, to run your code.
+          Update your browser to try Elementary. The playground uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#importing_modules_using_import_maps" target="_blank" className="underline">import maps</a>, a relatively new browser feature, to run your code.
         </Callout>
       )}
       {!outdatedBrowser && (
