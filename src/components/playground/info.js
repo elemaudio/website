@@ -2,14 +2,21 @@ import Link from 'next/link';
 import { Callout } from 'nextra/components';
 
 
-export function InfoPanel() {
+export function InfoPanel({outdatedBrowser}) {
   return (
     <div className="p-4 h-full overflow-y-scroll">
       <h2 className="text-3xl font-bold">Elementary Playground</h2>
-      <Callout type="info">
-        Note, this page is in beta. Please report any issues, weirdness, or feature requests on
-        GitHub or Discord.
-      </Callout>
+      {outdatedBrowser && (
+        <Callout type="error">
+          Update your browser to try Elementary. The playground uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#importing_modules_using_import_maps" target="_blank">import maps</a>, a relatively new browser feature, to run your code.
+        </Callout>
+      )}
+      {!outdatedBrowser && (
+        <Callout type="info">
+          Note, this page is in beta. Please report any issues, weirdness, or feature requests on
+          GitHub or Discord.
+        </Callout>
+      )}
       <p className="mt-4">
         This playground is a live-editing environment for exploring Elementary and making sound. Start by
         enabling the audio runtime with the play button in the bottom control panel. Afterwards, the runtime

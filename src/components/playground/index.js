@@ -31,17 +31,33 @@ export function Playground() {
   const [shareMessage, setShareMessage] = useState("");
   const [editorValue, setEditorValue] = useState(defaultEditorValue.trim());
   const [runtime, setRuntimeInstance] = useState(null);
+  const [outdatedBrowser, setOutdatedBrowser] = useState(false);
 
   // Mount the runtime
   useEffect(() => {
     if (!renderContext.audioContext)
       return;
 
-    let ri = new Runtime(renderContext.audioContext, '3.0.0');
+    (async function() {
+      try {
+        // First we check if the browser can even run our import map specification for
+        // elem core, because import maps are apparently a fairly new feature
+        const test = await window.awaitImport('@elemaudio/core');
+      } catch (e) {
+        setOutdatedBrowser(true);
+      }
 
-    ri.init().then(() => {
-      setRuntimeInstance(ri);
-    });
+      try {
+        // Next we try to initialize the runtime
+        const ri = new Runtime(renderContext.audioContext, '3.0.0');
+
+        await ri.init();
+        setRuntimeInstance(ri);
+      } catch (e) {
+        setStatusMessage('Failed to initialize the runtime');
+      }
+    })();
+
   }, [renderContext.audioContext]);
 
   // Handle query param routing
@@ -127,7 +143,7 @@ export function Playground() {
             value={editorValue} />
         </div>
         <div className="h-[78vh] flex-1">
-          <InfoPanel />
+          <InfoPanel outdatedBrowser={outdatedBrowser} />
         </div>
       </div>
       <div className="flex-1">
