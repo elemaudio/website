@@ -32,10 +32,10 @@ export function Hero() {
       <div className="isolate mx-auto max-w-2xl px-4 py-48">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-6xl">
-            Rethink your audio software stack
+            A JavaScript library for digital audio signal processing
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-            Elementary Audio is a library for building high performance, portable audio applications with functional, declarative JavaScript.
+            Elementary Audio helps you generate and transform sound, both natively and in the browser with a functional, declarative API.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
