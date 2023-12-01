@@ -2,6 +2,13 @@ import Link from 'next/link';
 import { Callout } from 'nextra/components';
 
 
+const examples = [
+  {
+    name: 'N-Band EQ',
+    href: '/playground?version=3.0.0&code=JYWwDg9gTgLgBAbwKYBsC+cBmUIjgcgAFUkQBDAVwBNgIB6AY2iXwG4AoduuuAQTgDOoMCiSCkUYGRRwyYEcAZkYtAHZwImWerJQARsBhRdAT0HAAXmIFJ4muAFEAilx56yqqgLgwI2uMCqYBTwQgDmqtIAdK6ucAAqABZimMBQAvBgumQgthJwAETungIFcEgAHmBIDDDeHrJQxmYA7oaJ5WQMHUiqRiZxDRB6AFY18FRIAgySBqphPslYwCgw+b6y8igmUQlLNkyecFnGuWtQccDeMEuBwaHAEdIaAG75LYmKHRtyImY3YmcMUwFFUtTU5QAjgAKYpeAA0cAqqgAlIh2HA4FBbBQoOo4QIotiqBQGEhodCugxEXC0QBeAB86MxmNE8F0YW8dLgAG04VFsEhITSPFQopCALocDEs4BaWGiqKJMgCADyLVUAAUcNVYCZofgwmRAvgUSiZSzGpyosEBIkFZ4okbAijpZbsTBcfjFTATNUokoUChoaoKEHEVFIxyBIiqa6ZWhEcj42hONw4KrcXBJphKKtylVoPANgJlFdMP8lpqUGQTGEcKCqHxNQBJdiVSCwbNIXNh+AITiY9MAMWgiyuBZyIjELRY2M2f0CCwBjicPj8ZGzUAoeBQEAgYF2LdUMvT0EmUHXxxwZIE1yWe4PcFncAoNkWYjCtgAamlPdJhxWJAAGUTAyUhTx4M5EggJsNkwWxum0JtJiYSYNCzKhlDIREPS9Jd-GGMZakg59PiQtogzgPQxD3MhJibQINhXata3rCBGyxXoLwkfBvG-YdgNfSATyHHhAkMKQUEsMsIFUGIxNIlstBMDi4G6Dwv3HbwQTBFQ5MRVSKHwKjVCQJA4L8LI3zEUUuIyXQYFIjZDheQIyQ-OBWLrBsjg2bE6KbIzLwE4DdlVAEoDad9DGfFYUFIgQAGtgDAQQjGNMJEmLPxsU8CQlwU2QBBMME4C-GBf1gCgAKA0DwJAaFUNgpBeGoWgABFsLRAdLTZey4G5MgWmNeAEJgboDToSgaHoABOAA2AB9YCWlBMIOu3EABCWgAGABWJb9rmgAmKIRpeU0OD62xqIoLQhpG2LmsmNrZq6mAyEpJ74GxQldGaAAhe6EKgaEzTdFk8LxZlLQIKgtoEAAuXb8CRu7MCdWwAGFlVUMyUA+r7dpReELRZfAEZ3ZGAEY0YxrGYFxjwCaJ6EadJ8nU0xRNBzgEdAmkbYMMvchAi4-LRdsGCxTgAAJCQZzESZplmMQbmxMQCVIzAxw4y9nGQuARjfdktjMWKNn1uBHzAAiqbwUtwFEIq8ovcHYdZW6CUG3lycxBAfD9JB0dQKI9xaLI70RQVIXRk7dsTxE47gGm4F5uHECD6pQ5QJVHkSKOYywbEU4T3bk-j9OyczwPfRz8o8+qMgkpj0v44AFgruAU5pxFnVUdGAA5q-JqU+cxaH1CFB0EUbqInenaEECyG50cpxGUfwREQBa9fbfwRNU8RDn4x59g0CAA',
+  },
+];
+
 export function InfoPanel({outdatedBrowser}) {
   return (
     <div className="p-4 h-full overflow-y-scroll">
@@ -32,10 +39,13 @@ export function InfoPanel({outdatedBrowser}) {
         or load some examples:
       </p>
       <ul className="list-disc px-6 py-2">
-        <li><Link href="#" className="text-pink-400 hover:text-pink-500">Example 1</Link></li>
-        <li><Link href="#" className="text-pink-400 hover:text-pink-500">Example 2</Link></li>
-        <li><Link href="#" className="text-pink-400 hover:text-pink-500">Example 3</Link></li>
-        <li><Link href="#" className="text-pink-400 hover:text-pink-500">Example 4</Link></li>
+        {examples.map(({name, href}) => {
+          return (
+            <li key={name}>
+              <Link href={href} className="text-pink-400 hover:text-pink-500">{name}</Link>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
