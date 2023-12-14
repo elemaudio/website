@@ -1,4 +1,4 @@
-# el.prewarp([props], wa)
+# el.prewarp([props], wd)
 
 Performs cutoff prewarping via the bi-linear transform. As an input, this node
 wants a signal specifying a frequency in the digital domain and maps it to the

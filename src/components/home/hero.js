@@ -35,7 +35,7 @@ export function Hero() {
             A JavaScript library for digital audio signal processing
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-            Elementary Audio helps you generate and transform sound, both natively and in the browser with a functional, declarative API.
+            Generate and transform sound, both natively and in the browser with a functional, declarative API.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
