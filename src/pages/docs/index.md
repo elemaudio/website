@@ -1,8 +1,3 @@
----
-sidebar_position: 1
-slug: /
----
-
 # Introduction
 
 Elementary is a JavaScript framework for writing high performance, native audio applications that
@@ -47,4 +42,4 @@ as our state (our `voiceData` array) changes, the rest of our program doesn't: o
 of that state. This design decision here is why working with Elementary can be faster, easier, and fundamentally more simple
 than the conventional approach.
 
-To deeply understand what's happening in this example, check out [In Depth](./In_Depth.md).
+To deeply understand what's happening in this example, check out [In Depth](../docs/in_depth).
