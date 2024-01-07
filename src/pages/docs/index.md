@@ -1,45 +1,32 @@
 # Introduction
 
-Elementary is a JavaScript framework for writing high performance, native audio applications that
-can run on a wide variety of target platforms. This is a novel approach to the way that we think about
-and write our audio software that prioritizes simplicity, iteration speed, developer experience, and time to market.
-With those priorities, we think we can help you develop and ship your audio application faster and more easily than
-any similar tool in this space.
+[**Elementary**](https://elementary.audio) is a JavaScript library for digital audio signal processing that
+aims to make the process of writing audio software faster and more intuitive while producing high quality, resilient code.
 
-## Motivation
+* **Declarative:** Elementary makes it simple to create interactive audio processes through functional, declarative programming. Describe your audio process as a function of your application state, and Elementary will efficiently update the underlying audio engine as necessary.
+* **Dynamic:** Most audio processing frameworks and tools facilitate building static processes. But what happens as your audio requirements change throughout the user journey? Elementary is designed to facilitate and adapt to the dynamic nature of modern audio applications.
+* **Portable:** By decoupling the JavaScript API from the underlying audio engine (the "what" from the "how"), Elementary enables writing portable applications. Whether the underlying engine is running in the browser, an audio plugin, or an embedded device, your JavaScript layer remains the same.
 
-The conventional approach to writing audio software is an challenging process requiring expertise
-in a wide breadth of topics– C++, multi-threading and thread safety, lock-free programming, and realtime thread safety
-come to quickly to mind, and we haven't even mentioned digital signal processing itself. Moreover, the tooling, workflow,
-and developer experience that we have in this approach pales in comparison to that of the web software industry, for example.
-All together, the reality of these complications is that the conventional approach for writing audio software is
-difficult and time consuming. We believe it doesn't have to be that way.
+To best understand Elementary, we recommend reading [Motivation](../docs/motivation), followed by [In Depth](../docs/in_depth). If you want to skip ahead
+and get started, read on below.
 
-Elementary aims to eliminate as much of that complexity and difficulty as possible, removing every barrier that we can that
-stands between you and shipping your audio application. We do that through a functional, declarative programming model that
-allows you to describe your desired audio process as a pure function of your application state, and leave everything else
-up to Elementary. You can write your software focusing solely on _what_ your application is, leaving the _how_ to the framework.
+## Getting Started
 
-```js
-// An example synthesizer voice describing a detuned saw pair running through
-// a lowpass filter, all as a pure function of our application state, received
-// here as "props," short for "properties."
-function synthVoice(props) {
-  return el.lowpass(props.cutoffFrequency, 0.707, el.add(
-    el.blepsaw(props.noteFrequency),
-    el.blepsaw(el.mul(1.01, props.noteFrequency)),
-  ));
-}
+Every Elementary application starts with the [@elemaudio/core](../docs/packages/core) package, which provides the
+framework for defining your audio processes and a generic set of utilities for performing the graph rendering and reconciling steps.
 
-// Rendering a hypothetical array of voice data by mapping the state through
-// our synthVoice function above.
-core.render(el.add(...voiceData.map(synthVoice)));
-```
+Next, because Elementary is designed to be used in a number of different environments, there are several different ways to integrate.
+If you're new to the project, we recommend studying the following workflows to get the feel of working in Elementary:
 
-Notice how in our example here, though contrived as it may be, we don't pay any mind to any of the complexity
-mentioned above: multi-threading and thread safety, lock-free programming, and realtime thread safety. More importantly,
-as our state (our `voiceData` array) changes, the rest of our program doesn't: our audio process is still simply a function
-of that state. This design decision here is why working with Elementary can be faster, easier, and fundamentally more simple
-than the conventional approach.
+* Use the [@elemaudio/web-renderer](../docs/packages/web-renderer) package with your favorite frontend UI library to make an audio web application
+* Use the [@elemaudio/offline-renderer](../docs/packages/offline-renderer) package with Node.js for static file processing
 
-To deeply understand what's happening in this example, check out [In Depth](../docs/in_depth).
+Once you're ready to dive in, we suggest starting with one of these ideas:
+
+* Jump into the [online playground](./playground) for the quickest way of experimenting with sound
+* Make an audio effects plugin following the [SRVB plugin template](https://github.com/elemaudio/srvb)
+* Try the small [command line tool](https://github.com/elemaudio/elementary/tree/main/cli) here in this repository to explore an example native integration
+* Check out the [Native Integrations](../docs/guides/Native_Integrations) guide for embedding Elementary's C++ engine in your own native code
+* Read the [Custom Native Nodes](../docs/guides/Custom_Native_Nodes) guide for extending Elementary's built-in DSP library with your own low-level processors
+
+
