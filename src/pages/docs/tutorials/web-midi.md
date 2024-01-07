@@ -1,8 +1,12 @@
 # Web MIDI
 
-This tutorial explains the basics of controlling an Elementary Audio app with the [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). The code discussed in this tutorial is available in the MIT-licensed [elementary-webmidi-demo](https://github.com/bgins/elementary-webmidi-demo) repository.
+This tutorial explains the basics of controlling an Elementary Audio app with
+MIDI. We will use the [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API) in this tutorial, but the approach to controlling Elementary through MIDI could be adapted to MIDI in a plugin or another MIDI source.
+
+The code discussed in this tutorial is available in the MIT-licensed [elementary-webmidi-demo](https://github.com/bgins/elementary-webmidi-demo) repository.
 
 ## Playing notes
+
 We will create a simple web app that plays notes sent by a MIDI controller. The app will:
 
 - Detect when a MIDI device is connected and disconnected
@@ -17,13 +21,13 @@ At a high level, the app has three parts:
 - Audio engine and synth modules for generating audio graphs and rendering them
 - An event emitter that sends note events from Web MIDI to the audio implementation
 
-The [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) ultimately renders audio because we are working in the browser.
+The [web-renderer](https://www.elementary.audio/docs/packages/web-renderer) ultimately renders audio using the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) because we are working in the browser.
 
 ## Control
 
 Our app uses [WEBMIDI.js](https://webmidijs.org/) to access the Web MIDI API. This library abstracts away many low-level Web MIDI details and makes detecting devices and capturing note events easy.
 
-The [midi module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/midi.js) includes a `noteEmitter` to send note events and `selectedInput` to track the active MIDI controller. We set the `selectedInput` to `null` until a device is selected.
+Our [midi module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/midi.js) includes a `noteEmitter` to send note events and `selectedInput` to track the active MIDI controller. We set the `selectedInput` to `null` until a device is selected.
 
 ```JavaScript
 import { WebMidi } from "webmidi";
@@ -43,7 +47,7 @@ export class Midi {
 
 Accessing MIDI devices requires an async call and must be made in a secure context (`localhost` or a site with properly configured `https`). In addition, some browsers will prompt users for permission when a site first requests Web MIDI access.
 
-The `Midi` class has an `initialize` method that enables Web MIDI and sets up event handlers to update available MIDI devices.
+Our `Midi` class has an `initialize` method that enables Web MIDI and sets up event handlers to update available MIDI devices.
 
 ```JavaScript
 async initialize(displayControllers) {
@@ -176,7 +180,7 @@ We check if the audio context is running and render the audio graph if so.
 
 ### Synth
 
-The [synth module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/audio/synth.js) contains a few helper functions to create synth voices and silence and to combine synth voices into a polyphonic whole.
+The [synth module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/audio/synth.js) contains a few helper functions to create and sum polyphonic synth voices and generate silence.
 
 The `synthVoice` function creates an `ElemNode` with a single voice.
 
