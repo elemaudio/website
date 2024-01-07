@@ -29,7 +29,7 @@ Our app uses [WEBMIDI.js](https://webmidijs.org/) to access the Web MIDI API. Th
 
 Our [midi module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/midi.js) includes a `noteEmitter` to send note events and `selectedInput` to track the active MIDI controller. We set the `selectedInput` to `null` until a device is selected.
 
-```JavaScript
+```js
 import { WebMidi } from "webmidi";
 
 export class Midi {
@@ -49,7 +49,7 @@ Accessing MIDI devices requires an async call and must be made in a secure conte
 
 Our `Midi` class has an `initialize` method that enables Web MIDI and sets up event handlers to update available MIDI devices.
 
-```JavaScript
+```js
 async initialize(displayControllers) {
   try {
     await WebMidi.enable();
@@ -70,7 +70,7 @@ async initialize(displayControllers) {
 
 `#getInputNames` is a private helper function to get MIDI device names.
 
-```JavaScript
+```js
 #getInputNames() {
   return WebMidi.inputs.map((input) => input.name);
 }
@@ -80,7 +80,7 @@ We won't cover the details of `displayControllers` or any UI functions in this t
 
 Lastly, the `Midi` class has a `setController` method to set the active controller and connect it to the `noteEmitter`.
 
-```JavaScript
+```js
 setController(controller) {
   // Stop any active notes
   this.noteEmitter.emit("stopAll");
@@ -124,7 +124,7 @@ The audio implementation includes an audio engine and a synth. The audio engine 
 
 The [engine module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/audio/engine.js) includes a `core` web renderer and a Web audio `context`.
 
-```JavaScript
+```js
 import WebRenderer from "@elemaudio/web-renderer";
 
 export class Engine {
@@ -145,7 +145,7 @@ Web Audio requires a user interaction before we can produce any sound, so we ini
 
 The `Engine` class has an `initialize` method that we will call on user interaction.
 
-```JavaScript
+```js
 async initialize() {
   // Start the audio context
   this.context.resume();
@@ -168,7 +168,7 @@ We configure the WebRenderer with zero inputs, one output, and one output channe
 
 The `Engine` class also has a `render` method that renders an audio graph with an `ElemNode` type.
 
-```JavaScript
+```js
 render(node) {
   if (this.context.state === "running") {
     this.core.render(node);
@@ -184,7 +184,7 @@ The [synth module](https://github.com/bgins/elementary-webmidi-demo/blob/main/sr
 
 The `synthVoice` function creates an `ElemNode` with a single voice.
 
-```JavaScript
+```js
 function synthVoice(voice) {
   return el.mul(
     el.const({ key: `${voice.key}:gate`, value: voice.gate }),
@@ -197,7 +197,7 @@ The voice is an `el.blepsaw` with a gate to control whether the voice is on or o
 
 The `synth` function sums multiple synth voices into a single audio graph and decreases the overall amplitude to a reasonable level.
 
-```JavaScript
+```js
 function synth(voices) {
   return el.mul(el.add(...voices.map((voice) => synthVoice(voice))), 0.1);
 }
@@ -205,7 +205,7 @@ function synth(voices) {
 
 The `silence` function generates silence when no notes are held on the selected controller.
 
-```JavaScript
+```js
 function silence() {
   return el.const({ key: "silence", value: 0 });
 }
@@ -215,7 +215,7 @@ The `Synth` class uses these functions to generate audio graphs with up to eight
 
 Our `Synth` class includes an array of `voices` representing held notes on the selected MIDI controller.
 
-```JavaScript
+```js
 import { el } from "@elemaudio/core";
 
 export class Synth {
@@ -227,7 +227,7 @@ export class Synth {
 
 When a `play` note event is received, the `playNote` method generates a key, computes the frequency for the note, and updates the voices.
 
-```JavaScript
+```js
 playNote(midiNote) {
   const key = `v${midiNote}`;
   const freq = computeFrequency(midiNote);
@@ -246,7 +246,7 @@ Any previous instances of the note are filtered out, the new voice is added with
 
 The `computeFrequency` function computes frequency in 12-tone equal temperament tuned to 440Hz with a base MIDI note of `69`.
 
-```JavaScript
+```js
 export function computeFrequency(midiNote) {
   return 440 * 2 ** ((midiNote - 69) / 12);
 }
@@ -254,7 +254,7 @@ export function computeFrequency(midiNote) {
 
 The `stopNote` method drops the voice associated with a note when receiving a `stop` note event.
 
-```JavaScript
+```js
 stopNote(midiNote) {
   const key = `v${midiNote}`;
   this.voices = this.voices.filter((voice) => voice.key !== key);
@@ -271,7 +271,7 @@ We return `silence` if the voice was the last active voice.
 
 Lastly, the `stopAllNotes` method removes all voices and returns silence.
 
-```JavaScript
+```js
 stopAllNotes() {
   this.voices = [];
 
@@ -285,7 +285,7 @@ We now have all the pieces we need. The `Midi` implementation sends note events 
 
 The [main module](https://github.com/bgins/elementary-webmidi-demo/blob/main/src/main.js) imports and instantiates our implementations.
 
-```JavaScript
+```js
 import Emittery from "emittery";
 
 import "./style.css";
@@ -304,7 +304,7 @@ We pass the `noteEmitter` to the `Midi` implementation.
 
 Next, we set up note event listeners.
 
-```JavaScript
+```js
 // Play note and update indicators
 noteEmitter.on("play", ({ midiNote }) => {
   engine.render(synth.playNote(midiNote));
@@ -327,7 +327,7 @@ On `play`, `stop`, and `stopAll` events, the synth generates an audio graph, and
 
 We mentioned earlier that we must initialize our `Midi` and `Engine` implementations on user interaction. The `getStarted` function does both when a user clicks a "Get Started" button.
 
-```JavaScript
+```js
 async function getStarted() {
   await midi.initialize(displayControllers);
   await engine.initialize();
@@ -337,7 +337,7 @@ async function getStarted() {
 
 One final detail and our app is complete. When a user selects a controller in the UI, we call the `Midi.setController` method.
 
-```JavaScript
+```js
 function setController(controller) {
   midi.setController(controller);
   ui.selectController(controller);
