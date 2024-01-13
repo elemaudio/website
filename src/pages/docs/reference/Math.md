@@ -97,6 +97,10 @@ None
 
 Computes the floor (rounding down to the nearest whole number) of the input signal. Expects exactly 1 child node.
 
+### el.round
+
+Rounds the input signal to the nearest whole number. Expects exactly 1 child node.
+
 #### Props
 
 None
