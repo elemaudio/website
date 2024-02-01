@@ -7,7 +7,7 @@ To see why this is helpful, let's consider that we can already sequence sample p
 using `el.sample` if we build a sequence of triggers using `sparseq2`:
 
 ```js
-let seq = el.sampleseq({
+let seq = el.sparseq2({
   seq: [
     { time: 0.0, value: 1 },
     { time: 0.5, value: 0 },
