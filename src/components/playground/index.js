@@ -49,7 +49,7 @@ export function Playground() {
 
       try {
         // Next we try to initialize the runtime
-        const ri = new Runtime(renderContext.audioContext, '3.1.0');
+        const ri = new Runtime(renderContext.audioContext, '3.2.0');
 
         await ri.init();
         setRuntimeInstance(ri);
@@ -109,7 +109,7 @@ export function Playground() {
 
   const onShare = useCallback(async (e) => {
     try {
-      const shareUrl = `${document.location.origin}/playground/?version=3.1.0&code=${compressToEncodedURIComponent(editorValue)}`;
+      const shareUrl = `${document.location.origin}/playground/?version=3.2.0&code=${compressToEncodedURIComponent(editorValue)}`;
       await navigator.clipboard.writeText(shareUrl);
 
       router.push(shareUrl);
@@ -129,7 +129,7 @@ export function Playground() {
       <Head>
         <meta name="robots" content="noindex,nofollow" />
         <script dangerouslySetInnerHTML={{ __html: awaitImportScript }} />
-        <script type="importmap" dangerouslySetInnerHTML={{ __html: getImportMapScript('3.1.0') }} />
+        <script type="importmap" dangerouslySetInnerHTML={{ __html: getImportMapScript('3.2.0') }} />
       </Head>
       <div className="flex-0 flex">
         <div className="h-[78vh] flex-1">

@@ -1,5 +1,5 @@
 export function getImportMapScript(version) {
-  return `{ "imports": { "@elemaudio/core": "https://cdn.skypack.dev/@elemaudio/core@~${version}" } }`;
+  return `{ "imports": { "@elemaudio/core": "https://cdn.skypack.dev/@elemaudio/core@^${version}" } }`;
 }
 
 export class Runtime {
@@ -11,7 +11,7 @@ export class Runtime {
   }
 
   async init() {
-    const pkg = await window.awaitImport(`https://cdn.skypack.dev/@elemaudio/web-renderer@~${this.version}`);
+    const pkg = await window.awaitImport(`https://cdn.skypack.dev/@elemaudio/web-renderer@^${this.version}`);
     const WebRenderer = pkg.default;
 
     this.core = new WebRenderer();
@@ -45,8 +45,8 @@ export class Runtime {
 
       const userOutput = render();
       const stats = Array.isArray(userOutput)
-        ? this.core.render(...userOutput)
-        : this.core.render(userOutput, userOutput);
+        ? await this.core.render(...userOutput)
+        : await this.core.render(userOutput, userOutput);
 
       return {
         ok: true,
