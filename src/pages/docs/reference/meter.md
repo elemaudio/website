@@ -40,6 +40,6 @@ core.on('meter', function(e) {
 #### Props
 
 | Name     | Default   | Type   | Description                            |
-| -------- | --------- | ----------------------------------------------- |
+| -------- | --------- | -------|--------------------------------------- |
 | name     | undefined | String | Identifies a meter node by name        |
 

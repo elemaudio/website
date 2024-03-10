@@ -19,7 +19,7 @@ el.cycle(el.const({value: 440}))
 #### Props
 
 | Name     | Default  | Type   | Description                            |
-| -------- | -------- | ----------------------------------------------- |
+| -------- | -------- | -------|--------------------------------------- |
 | value    | 0        | Number | Declare's the node's output value      |
 
 

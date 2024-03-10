@@ -18,7 +18,7 @@ el.in({channel: 2}, w, x, y, z); // Equivalent to `y`
 #### Props
 
 | Name     | Default  | Type   | Description                            |
-| -------- | -------- | ----------------------------------------------- |
+| -------- | -------- | -------|--------------------------------------- |
 | channel  | 0        | Number | Selects which input channel to forward |
 
 ### el.sin

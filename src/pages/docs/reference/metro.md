@@ -79,6 +79,6 @@ metro event objects.
 #### Props
 
 | Name     | Default   | Type   | Description                            |
-| -------- | --------- | ----------------------------------------------- |
+| -------- | --------- | -------|--------------------------------------- |
 | name     | undefined | String | Identifies a metro node by name        |
 | interval | undefined | Number | Metronome period in milliseconds       |
