@@ -23,7 +23,7 @@ el.sample(
 #### Props
 
 | Name     | Default  | Type   | Description                                                              |
-| -------- | -------- | --------------------------------------------------------------------------------- |
+| -------- | -------- | -------|------------------------------------------------------------------------- |
 | seq      | []       | Array  | The sequence of values to generate                                       |
 | offset   | 0        | number | The offset index to reset to on the rising edge of the reset signal      |
 | hold     | false    | Bool   | When true, continues to output the sequence value until the next trigger |

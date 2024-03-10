@@ -31,7 +31,7 @@ el.sample(
 #### Props
 
 | Name     | Default  | Type   | Description                                                              |
-| -------- | -------- | --------------------------------------------------------------------------------- |
+| -------- | -------- | -------|------------------------------------------------------------------------- |
 | seq      | []       | Array  | The sequence of values to generate                                       |
 | offset   | 0        | number | The sequence offset value                                                |
 | hold     | false    | Bool   | When true, continues to output the sequence value until the next trigger |

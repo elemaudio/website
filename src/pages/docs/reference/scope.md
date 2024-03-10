@@ -50,7 +50,7 @@ Multi-channel synchronization through the scope node itself requires only:
 #### Props
 
 | Name     | Default   | Type   | Description                            |
-| -------- | --------- | ----------------------------------------------- |
+| -------- | --------- | -------|--------------------------------------- |
 | name     | undefined | String | Identifies a scope node by name        |
 | size     | 512       | Number | Block size to buffer and report to js  |
 | channels | 1         | Number | The number of children to report on    |
