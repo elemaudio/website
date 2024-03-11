@@ -11,7 +11,7 @@ as follows:
 
 ```js
 core.render(
-  el.tapOut({name: 'a', size: 22050},
+  el.tapOut({name: 'a'},
     el.mul(
       0.5,
       el.add(
