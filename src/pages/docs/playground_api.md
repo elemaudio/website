@@ -20,7 +20,7 @@ Part of being able to successfully re-evaluate your code as you type requires ma
 do that, the Playground initializes itself by requesting any state that you might want to persist to the running instance, such as entries
 in the [Virtual File System](./guides/Virtual_File_System).
 
-During initialization, the Playground runtime will updates its internal virtual file system with the contents of the object that you return
+During initialization, the Playground runtime updates its internal virtual file system with the contents of the object that you return
 from this function. This function is _only_ called upon initialization, so if you make changes you will need to press the Reset button
 on the Playground to rerun the initialization steps.
 

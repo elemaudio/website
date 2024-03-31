@@ -10,7 +10,7 @@ same input both as the input to be compressed and as the sidechain signal itself
 for standard compressor behavior.
 
 * `@param {Node | number} atkMs` – attack time in milliseconds
-* `@param {Node | number} relMs` – release time in millseconds
+* `@param {Node | number} relMs` – release time in milliseconds
 * `@param {Node | number} threshold` – decibel value above which the comp kicks in
 * `@param {Node | number} ratio` – ratio by which we squash signal above the threshold
 * `@param {Node | number} kneeWidth` – width of the knee in decibels, 0 for hard knee

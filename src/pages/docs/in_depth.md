@@ -120,7 +120,7 @@ core.initialize();
 
 Now our example is prepared for change: each time the user moves the slider, we'll receive a callback
 informing the new value, and we simply describe the new audio graph and call `core.render()`. In this example,
-we're calling `core.render()` many many times in succession as the user drags the slider: that's the idea!
+we're calling `core.render()` many times in succession as the user drags the slider: that's the idea!
 
 Ok so now we have an appropriate backdrop to discuss what actually happens inside the call to `core.render()`.
 Let's pick a point right in the middle of the lifetime of our application: we have already called `core.render()`
@@ -140,6 +140,6 @@ that we're building and discussing here are extremely lightweight, virtual repre
 It's only after the reconciliation process has completed that we introduce the corresponding native audio processing
 nodes that actually handle the realtime audio data. Elementary can already assemble and then reconcile graphs of thousands and
 thousands of deeply interconnected nodes within a couple milliseconds, and we expect to make this faster still. Of course, undergoing that process does add
-those few millseconds of overhead, and this is exactly the tradeoff we aim to make to ensure one thing: you as an audio
+those few milliseconds of overhead, and this is exactly the tradeoff we aim to make to ensure one thing: you as an audio
 application author never need to think about _how_ to address dynamic audio graph behavior. You can always rely on one simple
 paradigm: describe how your audio graph should sound now, and let Elementary handle the rest.

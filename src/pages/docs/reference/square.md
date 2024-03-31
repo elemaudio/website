@@ -8,7 +8,7 @@ Outputs a naive square oscillator at the given frequency. Expects exactly one ch
 specifying the cycle frequency in `hz`.
 
 Typically, due to the aliasing of the naive square at audio rates, this oscillator
-is used for low frequencly modulation.
+is used for low frequency modulation.
 
 #### Props
 

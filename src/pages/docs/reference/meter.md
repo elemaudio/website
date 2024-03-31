@@ -9,9 +9,9 @@ maximum and minimum peak value each block. The result is emitted through the
 core Renderer event interface with an event object matching the following
 structure.
 
-```javascript
+```typescript
 interface MeterEvent {
-  source: string?;
+  source?: string;
   min: number;
   max: number;
 };

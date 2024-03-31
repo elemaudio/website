@@ -8,7 +8,7 @@ these blocks of audio hold a few (or tens of) milliseconds of audio data.
 
 As you write your audio software, you have some flexibility to decide what changes take effect
 and where, to make your own tradeoffs about the performance and structure of your app. The general
-distiction to be aware of is that any time you execute javascript, changes made to the signal flow
+distinction to be aware of is that any time you execute javascript, changes made to the signal flow
 of your application will only be applied at the beginning of the next audio block (which means that, due
 to the block size, your change might not take effect for several milliseconds).
 

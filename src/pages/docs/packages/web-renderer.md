@@ -4,7 +4,7 @@ The official package for rendering Elementary applications in web browsers using
 
 ## Installation
 
-```js
+```sh
 npm install --save @elemaudio/web-renderer
 ```
 
@@ -49,7 +49,7 @@ Web Audio application as you like. See `initialize()` for connecting to WebAudio
 ### initialize
 
 ```js
-core.initialize(ctx: AudioContext, options: AudioWorkletNodeOptions) : Promise<WebAudioNode>`
+core.initialize(ctx: AudioContext, options: AudioWorkletNodeOptions) : Promise<WebAudioNode>
 ```
 
 Initializes the Elementary runtime within the provided AudioContext. Here, Elementary will construct

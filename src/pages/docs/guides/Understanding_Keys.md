@@ -4,7 +4,7 @@ This guide assumes that you've already read the [In Depth](../In_Depth) introduc
 and picks up where the In Depth introduction leaves off when it references keys.
 
 If your application only ever makes a single call to `core.render`, then this section won't
-really apply, and in such a case the behavior is well explained in [In Depth](./In_Depth).
+really apply, and in such a case the behavior is well explained in [In Depth](../In_Depth).
 However, audio applications frequently exhibit dynamic behavior, and it's in this context that
 we'll explore what happens when you make multiple successive calls to `core.render`.
 
@@ -56,7 +56,7 @@ Now, after updating our voices, we re-run the `synth` function and then call `co
 where the behavior gets interesting. On the first call to `core.render`, Elementary is starting from a
 blank slate and simply does the work to realize the graph you've provided. On the second call, Elementary will compare the
 new signal to render with the one that it has most recently rendered for you already. While doing this, Elementary
-will look for the the minimal set of changes to apply to the existing rendering to arrive at the new desired state, and
+will look for the minimal set of changes to apply to the existing rendering to arrive at the new desired state, and
 apply those changes. This is much like the "virtual DOM diff" that React.js popularized for web applications.
 
 ## Keys
@@ -119,7 +119,7 @@ function synth(vs) {
       el.const({key: `${v.key}:gate`, value: v.gate}),
       el.cycle(el.const({key: `${v.key}:freq`, value: v.freq}))
     );
-  });
+  }));
 }
 ```
 

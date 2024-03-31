@@ -19,7 +19,7 @@ rising edge of its output signal.
 For example, consider a graph like the following:
 
 ```js
-core.on('load' function(e) {
+core.on('load', function(e) {
   core.render(el.train(5));
 
   setTimeout(function() {
@@ -37,7 +37,7 @@ will ever share a synchronized rising edge in time.
 Alternatively, consider this example:
 
 ```js
-core.on('load' function(e) {
+core.on('load', function(e) {
   core.render(el.metro({interval: 200}));
 
   setTimeout(function() {
@@ -55,7 +55,7 @@ Further, we can now listen for event callbacks to coordinate some JavaScript wit
 metronome timing.
 
 ```js
-core.on('load' function(e) {
+core.on('load', function(e) {
   core.render(el.metro({interval: 200}));
 });
 
@@ -68,9 +68,9 @@ core.on('metro', function(e) {
 
 Finally, the event object emitted with the "metro" event follows the given structure.
 
-```javascript
+```typescript
 interface MetroEvent {
-  source: string?;
+  source?: string;
 };
 ```
 
