@@ -6,7 +6,7 @@ the actual encoding/decoding to and from file is not handled here, just the audi
 
 ## Installation
 
-```js
+```sh
 npm install --save @elemaudio/offline-renderer
 ```
 
@@ -72,7 +72,7 @@ The options object expects the following properties:
 * `numOutputChannels: number` – default 2
 * `sampleRate: number` – default 44100
 * `blockSize: number` – default 512
-* `virtualFileSystem: Object<string, Array<number>|Float32Array>` – default `{}`
+* `virtualFileSystem: Object<string, Array<number>|Float32Array>` – default `{}`
 
 **Note** the difference here in the `initialize` API between the `offline-renderer` and the `web-renderer`: when initializing
 the `web-renderer` we must use the `processorOptions` field to propagate the `virtualFileSystem` argument due to the nature of
