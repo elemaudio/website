@@ -42,6 +42,7 @@
   "rand": "el.rand",
   "sample": "el.sample",
   "sampleseq": "el.sampleseq",
+  "sampleseq2": "el.sampleseq2",
   "saw": "el.saw",
   "scope": "el.scope",
   "sdelay": "el.sdelay",
