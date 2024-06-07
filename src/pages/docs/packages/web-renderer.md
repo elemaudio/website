@@ -17,10 +17,6 @@ import WebRenderer from '@elemaudio/web-renderer';
 const ctx = new AudioContext();
 const core = new WebRenderer();
 
-core.on('load', function() {
-  core.render(el.cycle(440), el.cycle(441));
-});
-
 (async function main() {
   let node = await core.initialize(ctx, {
     numberOfInputs: 0,
@@ -29,6 +25,9 @@ core.on('load', function() {
   });
 
   node.connect(ctx.destination);
+
+  let stats = await core.render(el.cycle(440), el.cycle(441));
+  console.log(stats);
 })();
 ```
 
@@ -75,7 +74,7 @@ node.connect(ctx.destination);
 ### render
 
 ```js
-core.render(...args: Array<NodeRepr_t | number>) : RenderStats;
+core.render(...args: Array<NodeRepr_t | number>) : Promise<RenderStats>;
 ```
 
 Performs the reconciliation process for rendering your desired audio graph. This method expects one argument
@@ -85,19 +84,66 @@ with two arguments: `core.render(leftOut, rightOut)`.
 The `RenderStats` object returned by this call provides some insight into what happened during the reconciliation
 process: how many new nodes and edges were added to the graph, how long it took, etc.
 
+### createRef
+
+```js
+core.createRef(kind: string, props: Object<string, any>, children: Array<ElemNode>): [NodeRepr_t, (props) => Promise<void>]
+```
+
+Creates a pair of [node, propertySetter]. The node can be used like a regular ElemNode in your graph construction, and the propertySetter can be used thereafter to set the node's properties without incurring a full graph render.
+
+See [Using Refs](../guides/Using_Refs).
+
 ### updateVirtualFileSystem
 
 ```js
-core.updateVirtualFileSystem(Object<string, Array | Float32Array>);
+core.updateVirtualFileSystem(Object<string, Array | Float32Array>): Promise<bool>;
 ```
 
-Use this method to dynamically update the buffers available in the virtual file system after initialization. See the
+Use this method to add new buffers to the virtual file system after initialization. Returns a promise which
+resolves to a boolean indicating the success of the insertion. See the
 Virtual File System section below for more details.
+
+**Note:** overwriting existing entries is not supported. This method should be used only to add _new_ entries to the virtual file system. If you need to clear old, unused entries, see `pruneVirtualFileSystem` below.
+
+### listVirtualFileSystem
+
+```js
+core.listVirtualFileSystem(): Promise<Array<string>>;
+```
+
+Lists the entries in the virtual file system by name.
+
+### pruneVirtualFileSystem
+
+```js
+core.pruneVirtualFileSystem(): Promise<void>;
+```
+
+Removes unused entries from the virtual file system.
+
+### setCurrentTime
+
+```js
+core.setCurrentTime(t): Promise<void>;
+```
+
+Sets the current engine time to `t`, given in samples. This immediately changes the output of any `el.time()`
+node in the graph.
+
+### setCurrentTimeMs
+
+```js
+core.setCurrentTime(t): Promise<void>;
+```
+
+Sets the current engine time to `t`, given in milliseconds. This immediately changes the output of any `el.time()`
+node in the graph.
 
 ### reset
 
 ```js
-core.reset();
+core.reset(): Promise<void>;
 ```
 
 Resets internal nodes and buffers back to their initial state.
