@@ -48,7 +48,7 @@ any time you want to _change_ an existing property value for an existing node wi
 
 ```js
 // Creating a ref to an svf filter node
-let [svf, setFilterProps] = createNode("svf", {mode: 'lowpass'}, [filterInput]);
+let [svf, setFilterProps] = createRef("svf", {mode: 'lowpass'}, [filterInput]);
 
 // Mount the svf somewhere in our graph
 core.render(...)
