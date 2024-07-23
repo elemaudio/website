@@ -108,7 +108,7 @@ Elementary will happily go ahead with that for you, but note that writing `el.mu
 expression `el.mul(6.28318.., t)`. Therefore, instead of `h(x) = f(x) * g(x)` describing three functions, we simply have `h(x) = 6.28318`.
 
 This simple trick is helpful to keep in mind as you write more and more complicated Elementary applications, because
-it lets you compute constant values ahead of time that might otherwise be reduntant to actually compute continuously
+it lets you compute constant values ahead of time that might otherwise be redundant to actually compute continuously
 at audio rate (Elementary can and often will find and perform simple optimizations like this for you, but being explicit never hurts).
 
 Ok, backing up: we've got our `sineTone` function, and we know that we want to use a `phasor` to represent time. What
@@ -119,12 +119,12 @@ let tone = sineTone(el.phasor(440));
 elementary.core.render(tone);
 ```
 
-Simple! We've now arrived at a complete Elementary application for generating a continous sine tone. Let's
+Simple! We've now arrived at a complete Elementary application for generating a continuous sine tone. Let's
 walk this back through one more time. To start, we have our `el.phasor(440)` which generates a ramp from 0 to 1
 continuously, 440 times a second. We take this signal and multiply it by two Pi: `el.mul(2 * Math.PI, t)`. The result
 is then a signal which ramps from 0 to 6.28318... continuously, 440 times a second. Finally, we take the sin of that signal
 with `el.sin()`, and, remembering that [0, 2 * Pi] describes a complete cycle of the sin function, we therefore have a continuous
-signal which outputs a continguous sequence of sine wave cycles, 440 per second. The complete program in Elementary is as follows:
+signal which outputs a continuous sequence of sine wave cycles, 440 per second. The complete program in Elementary is as follows:
 
 ```js
 import {ElementaryPluginRenderer as core, el} from '@elemaudio/core';

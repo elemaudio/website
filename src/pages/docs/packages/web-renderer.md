@@ -4,7 +4,7 @@ The official package for rendering Elementary applications in web browsers using
 
 ## Installation
 
-```js
+```sh
 npm install --save @elemaudio/web-renderer
 ```
 
@@ -49,7 +49,7 @@ Web Audio application as you like. See `initialize()` for connecting to WebAudio
 ### initialize
 
 ```js
-core.initialize(ctx: AudioContext, options: AudioWorkletNodeOptions) : Promise<WebAudioNode>`
+core.initialize(ctx: AudioContext, options: AudioWorkletNodeOptions) : Promise<WebAudioNode>
 ```
 
 Initializes the Elementary runtime within the provided AudioContext. Here, Elementary will construct
@@ -90,7 +90,17 @@ process: how many new nodes and edges were added to the graph, how long it took,
 core.createRef(kind: string, props: Object<string, any>, children: Array<ElemNode>): [NodeRepr_t, (props) => Promise<void>]
 ```
 
-Creates a pair of [node, propertySetter]. The node can be used like a regular ElemNode in your graph construction, and the propertySetter can be used thereafter to set the node's properties without incurring a full graph render.
+Creates a pair of [node, propertySetter]. The node can be used like a regular ElemNode in your graph construction, and the propertySetter can be used thereafter to set the node's properties without incurring a full graph render. Note that you must mount the node (i.e. pass it, in some graph layout, through the Renderer's render method) before
+invoking the property setter will work.
+
+The arguments to `createRef` are the same as when dealing with the `el.*` standard library nodes, except that here we name the desired node in the first string argument. The props argument is as usual, and any child nodes of created ref node should be passed as an array in the third `children` argument.
+
+```js
+// The following expressions create equivalent nodes, but the latter provides the ref
+// with the property setter function
+el.svf({mode: 'lowpass'}, 800, 1, inputNode);
+createRef('svf', {mode: 'lowpass'}, [el.const({value: 800}), el.const({value: 1}), inputNode]);
+```
 
 See [Using Refs](../guides/Using_Refs).
 

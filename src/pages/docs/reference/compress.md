@@ -4,7 +4,7 @@ A simple hard-knee compressor with parameterized attack, release, threshold,
 and ratio, with an optional sidechain input.
 
 * `@param {Node | number} atkMs` – attack time in milliseconds
-* `@param {Node | number} relMs` – release time in millseconds
+* `@param {Node | number} relMs` – release time in milliseconds
 * `@param {Node | number} threshold` – decibel value above which the comp kicks in
 * `@param {Node | number} ratio` – ratio by which we squash signal above the threshold
 * `@param {Node} sidechain – sidechain` signal to drive the compressor

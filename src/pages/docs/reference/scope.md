@@ -7,9 +7,9 @@ sidebar_label: el.scope
 A pass-through node which buffers its incoming signal(s), and reports them to the
 JavaScript environment through the core Renderer event emitting interface.
 
-```javascript
+```typescript
 interface ScopeEvent {
-  source: string?;
+  source?: string;
   data: Array<Array<Number>>;
 };
 ```
