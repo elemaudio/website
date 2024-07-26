@@ -131,7 +131,7 @@ None
 
 ### el.eq
 
-Compares the first input to the second input, returning 1 when the the two signals
+Compares the first input to the second input, returning 1 when the two signals
 have equal values, and 0 otherwise.
 
 #### Props

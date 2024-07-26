@@ -7,7 +7,7 @@ integrations.
 
 ## Installation
 
-```js
+```sh
 npm install --save @elemaudio/core
 ```
 
@@ -30,7 +30,7 @@ documentation on exactly which nodes are available and what they do, see the Ref
 
 ### createNode
 
-```js
+```typescript
 function createNode(kind: string, props: Object, children: array<ElemNode>): NodeRepr_t;
 ```
 
@@ -41,7 +41,7 @@ Typically, you'll only need to pay attention to this API for referring to your o
 
 ### isNode
 
-```js
+```typescript
 function isNode(a: any): bool;
 ```
 
@@ -49,7 +49,7 @@ A simple utility for identifying if the input argument is of type `NodeRepr_t`.
 
 ### resolve
 
-```js
+```typescript
 function resolve(n: NodeRepr_t | number): NodeRepr_t;
 ```
 

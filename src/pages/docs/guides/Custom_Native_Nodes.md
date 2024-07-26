@@ -105,7 +105,7 @@ runtime.registerNodeType("myCustomNode", [](elem::NodeId const id, double sample
 });
 ```
 
-That's it! Now our runtime is prepared to handle instructions for nodes of type `"myCustonNode"` by delegating the requisite
+That's it! Now our runtime is prepared to handle instructions for nodes of type `"myCustomNode"` by delegating the requisite
 calls to an instance of your custom node type. From the JavaScript side then, we simply need the `createNode` method
 from `@elemaudio/core`:
 
@@ -114,7 +114,7 @@ import { el, createNode } from '@elemaudio/core';
 
 
 // A simple wrapper for calling to createNode
-let custom = (props, ...children) => createNode("myCustonNode", props, children);
+let custom = (props, ...children) => createNode("myCustomNode", props, children);
 
 // Some time later, we can use our custom node
 core.render(el.add(custom({value: 5}), custom({value: 6})));
