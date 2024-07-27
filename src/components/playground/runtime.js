@@ -1,5 +1,3 @@
-import { el } from '@elemaudio/core';
-
 export function getImportMapScript(version) {
   return `{ "imports": { "@elemaudio/core": "https://cdn.skypack.dev/@elemaudio/core@^${version}" } }`;
 }
@@ -10,12 +8,15 @@ export class Runtime {
     this.version = version;
     this.core = null;
     this.node = null;
+    this.el = null;
   }
 
   async init() {
     const pkg = await window.awaitImport(`https://cdn.skypack.dev/@elemaudio/web-renderer@^${this.version}`);
+    const coreLib = await window.awaitImport(`https://cdn.skypack.dev/@elemaudio/core@^${this.version}`); 
     const WebRenderer = pkg.default;
 
+    this.el = coreLib.el;
     this.core = new WebRenderer();
     this.node = await this.core.initialize(this.ctx, {
       numberOfInputs: 0,
@@ -46,8 +47,8 @@ export class Runtime {
         throw new Error('Missing render function on default export');
 
       const userOutput = render();
-      // This limiter setting preserves approx. 1 dB of headroom.
-      const limit = (input) => el.compress(1, 10, -4, 20, input, input);
+      // This limiter preserves approx. .5 dB of headroom at max input.
+      const limit = (input) => this.el.compress(1, 50, -4.5, 50, input, input);
       const stats = Array.isArray(userOutput)
         ? await this.core.render(...userOutput.map(limit))
         : await this.core.render(limit(userOutput), limit(userOutput));
