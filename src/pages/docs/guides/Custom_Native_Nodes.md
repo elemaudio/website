@@ -130,4 +130,4 @@ inputs will be served to your custom node instance as input buffer data in `elem
 
 ## API
 
-For a complete and current enumeration of the `elem::GraphNode<FloatType>` API, please see [GraphNode.h](https://github.com/elemaudio/elementary/blob/main/runtime/GraphNode.h).
+For a complete and current enumeration of the `elem::GraphNode<FloatType>` API, please see [GraphNode.h](https://github.com/elemaudio/elementary/blob/main/runtime/elem/GraphNode.h).
