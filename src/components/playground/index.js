@@ -32,6 +32,7 @@ export function Playground() {
   const [editorValue, setEditorValue] = useState(defaultEditorValue.trim());
   const [runtime, setRuntimeInstance] = useState(null);
   const [outdatedBrowser, setOutdatedBrowser] = useState(false);
+  const [showInfoPanel, setShowInfoPanel] = useState(true);
 
   // Mount the runtime
   useEffect(() => {
@@ -123,28 +124,40 @@ export function Playground() {
     }, 2000);
   }, [editorValue]);
 
+  const toggleInfoPanel = useCallback(() => {
+    setShowInfoPanel(prevShowInfoPanel => !prevShowInfoPanel);
+  }, []);
+
+
 
   return (
-    <div className="el__full-height w-full flex flex-col">
+    <div className="flex flex-col w-auto el__full-height">
       <Head>
         <meta name="robots" content="noindex,nofollow" />
         <script dangerouslySetInnerHTML={{ __html: awaitImportScript }} />
         <script type="importmap" dangerouslySetInnerHTML={{ __html: getImportMapScript('3.2.0') }} />
       </Head>
-      <div className="flex-0 flex">
+      <div className="flex flex-0">
         <div className="h-[78vh] flex-1">
           <Editor
-            className="w-full"
+            width={ showInfoPanel ? "95%" : "100%" }
             height="78vh"
             theme="vs-dark" // or "light"
             defaultLanguage="javascript"
-            options={{ minimap: { enabled: false }}}
+            options={{ 
+              minimap: { enabled: false },
+              fontSize: 16,
+            }
+            }
             onChange={onChange}
             value={editorValue} />
         </div>
-        <div className="h-[78vh] flex-1">
+
+        { showInfoPanel && <div className="flex-1 h-[78vh]" > 
           <InfoPanel outdatedBrowser={outdatedBrowser} />
-        </div>
+        </div> }
+      
+       
       </div>
       <div className="flex-1">
         <Controls
@@ -152,7 +165,8 @@ export function Playground() {
           statusMessage={statusMessage}
           onPlayPause={onPlayPause}
           onShare={onShare}
-          shareMessage={shareMessage} />
+          shareMessage={shareMessage} 
+          toggleInfoPanel={toggleInfoPanel}/>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import {
   ArrowPathIcon,
   ArrowUpOnSquareIcon,
   CommandLineIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
 
@@ -25,31 +26,35 @@ export function Controls(props) {
     onShare,
     statusMessage,
     shareMessage,
+    toggleInfoPanel
   } = props;
 
   return (
-    <div className="h-full flex">
-      <div className="flex-0 w-1/2 flex items-center px-5">
+    <div className="flex h-full">
+      <div className="flex items-center w-1/2 px-5 flex-0">
         <Button onClick={onPlayPause}>
           {(isRunning
-            ? <PauseIcon className="h-5 w-5" />
-            : <PlayIcon className="h-5 w-5" />
+            ? <PauseIcon className="w-5 h-5" />
+            : <PlayIcon className="w-5 h-5" />
           )}
         </Button>
         <Button onClick={onRestart}>
-          <ArrowPathIcon className="h-5 w-5" />
+          <ArrowPathIcon className="w-5 h-5" />
         </Button>
         <Button onClick={onShare}>
-          <ArrowUpOnSquareIcon className="h-5 w-5" />
+          <ArrowUpOnSquareIcon className="w-5 h-5" />
+        </Button>
+        <Button onClick={toggleInfoPanel}>
+          <ArrowRightOnRectangleIcon className="w-5 h-5" />
         </Button>
         {shareMessage && (
           <span className="text-sm text-pink-400">{shareMessage}</span>
         )}
       </div>
-      <div className="flex-0 w-1/2 max-w-1/2 flex items-center px-4">
-        <div className="flex-1 max-w-full flex items-center py-2 text-gray-700 dark:text-gray-500">
-          <CommandLineIcon className="h-5 w-5" />
-          <span className="px-2 flex-1 truncate">{statusMessage}</span>
+      <div className="flex items-center w-1/2 px-4 flex-0 max-w-1/2">
+        <div className="flex items-center flex-1 max-w-full py-2 text-gray-700 dark:text-gray-500">
+          <CommandLineIcon className="w-5 h-5" />
+          <span className="flex-1 px-2 truncate">{statusMessage}</span>
         </div>
       </div>
     </div>

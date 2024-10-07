@@ -15,7 +15,7 @@ const examples = [
 
 export function InfoPanel({outdatedBrowser}) {
   return (
-    <div className="p-4 h-full overflow-y-scroll">
+    <div className="h-full p-4 ">
       <h2 className="text-3xl font-bold">Elementary Playground</h2>
       {outdatedBrowser && (
         <Callout type="error">
@@ -35,14 +35,14 @@ export function InfoPanel({outdatedBrowser}) {
       </p>
       <p className="mt-4">
         As a general guideline, you can write anything you like as long as it's an ES6 module with a default export
-        object containing at least a <code className="bg-gray-200 dark:bg-gray-700 p-1 rounded-md border border-gray-300 dark:border-gray-800">render()</code> method. This method will be invoked upon evaluating your code to
+        object containing at least a <code className="p-1 bg-gray-200 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-800">render()</code> method. This method will be invoked upon evaluating your code to
         update the running state of the audio runtime.
       </p>
       <p className="mt-4">
         For more information, check out the <Link href="/docs/playground_api" className="text-pink-400 hover:text-pink-500">Playground API Reference</Link>,
         or load some examples:
       </p>
-      <ul className="list-disc px-6 py-2">
+      <ul className="px-6 py-2 list-disc">
         {examples.map(({name, href}) => {
           return (
             <li key={name}>
