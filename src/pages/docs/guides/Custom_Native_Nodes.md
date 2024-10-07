@@ -29,9 +29,10 @@ class MyCustomNode : public elem::GraphNode<float> {
 public:
     using elem::GraphNode<float>::GraphNode;
 
-    void setProperty(std::string const& key, elem::js::Value const& val) override
+    int setProperty(std::string const& key, elem::js::Value const& val) override
     {
         // TODO
+        return elem::ReturnCode::Ok();
     }
 
     void process (elem::BlockContext<float> const& ctx) override
