@@ -2,7 +2,7 @@
 sidebar_label: el.maxhold
 ---
 
-# el.maxhold([props], x, reset)
+# el.maxhold(props, x, reset)
 
 A simple peak-holding utility. By default, this will output a signal whose value matches the
 maximum value so far seen from the incoming input signal `x`. The maximum value can be reset

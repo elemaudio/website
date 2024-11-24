@@ -2,14 +2,14 @@
 sidebar_label: el.snapshot
 ---
 
-# el.snapshot([props], t, x)
+# el.snapshot(props, t, x)
 
 The snapshot node is conceptually very similar to `el.latch`, or sample and hold,
 except that the value sampled is not propagated as a signal, rather sent as an
 event through the core event emitter.
 
 Specifically, `el.snapshot(t, x)` will _always_ propagate the input signal `x`,
-but on the rising edge of a pulse train `t` it will capture the current value of
+but on the rising edge of a pulse train `t` it will also capture the current value of
 `x` and emit an event.
 
 Expected children:

@@ -2,7 +2,7 @@
 sidebar_label: el.svf
 ---
 
-# el.svf([props], fc, q, x)
+# el.svf(props, fc, q, x)
 
 A second order state variable filter with cutoff frequency `fc` and Q `q` which filters the incoming signal `x`. This
 filter's mode is set by the `mode` property to any of:

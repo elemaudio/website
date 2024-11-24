@@ -1,4 +1,4 @@
-# el.mm1p([props], g, x)
+# el.mm1p(props, g, x)
 
 A first-order, "virtual analog" zero-delay multi-mode filter as defined in
 Vadim Zavalishin's "The Art of VA Filter Design."
@@ -12,7 +12,7 @@ digital domain cutoff frequency to analog.
 
 Example:
 ```js
-let out = el.mm1p(el.prewarp(800), el.in({channel: 0}));
+let out = el.mm1p({}, el.prewarp(800), el.in({channel: 0}));
 ```
 
 #### Props

@@ -2,7 +2,7 @@
 sidebar_label: el.table
 ---
 
-# el.table([props], t)
+# el.table(props, t)
 
 Loads a lookup table from a buffer in the [virtual file system](../guides/Virtual_File_System.md), from which it
 performs an interpolated read with a position determined by the incoming signal phase.

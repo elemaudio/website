@@ -2,9 +2,9 @@
 sidebar_label: el.tapOut
 ---
 
-# el.tapOut([props], xn)
+# el.tapOut(props, xn)
 
-The tapOut node pairs with the tapIn node to provide special case behavior for implementing
+The tapOut node pairs with the [tapIn node](./tapIn.md) to provide special case behavior for implementing
 feedback around arbitrary parts of your signal graph. A tapOut node is identified by name,
 and its signal can be fed back into any part of your signal graph using a tapIn node by the
 same name.
@@ -42,5 +42,5 @@ core.render(output);
 | name     | ''       | String | Names the output tap                          |
 
 
-* Note: the implicit delay is always exactly one block long. You therefore have some level of flexibility
+* **Note:** the implicit delay is always exactly one block long. You therefore have some level of flexibility
   in your use case by configuring the engine with a block size that suits your needs.

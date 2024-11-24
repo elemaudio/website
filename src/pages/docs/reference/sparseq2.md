@@ -40,5 +40,5 @@ el.sparseq2({seq: [
 | Name        | Default  | Type                | Description                                                                   |
 | ----------- | -------- | ------------------- | ----------------------------------------------------------------------------- |
 | seq         | []       | Array               | The sequence of values to generate, in { time, value } pairs                  |
-| interpolate | false    | bool                | Perform linear interpolation between two successive values                    |
+| interpolate | 0        | Number              | Pass 1 for linear interpolation between successive values, 0 for none (hold)  |
 

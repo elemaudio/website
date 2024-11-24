@@ -2,7 +2,7 @@
 sidebar_label: el.sparseq
 ---
 
-# el.sparseq([props], t, reset)
+# el.sparseq(props, t, reset)
 
 Much like [`el.seq`](./seq.md) or [`el.seq2`](./seq2.md), the `sparseq` node is for
 sequencing values over time. The difference is that `sparseq` is intended for sparse
@@ -37,9 +37,11 @@ start of the sequence given a train with a 2ms period.
 
 #### Props
 
-| Name     | Default  | Type                | Description                                                                   |
-| -------- | -------- | ------------------- | ----------------------------------------------------------------------------- |
-| seq      | []       | Array               | The sequence of values to generate                                            |
-| offset   | 0        | number              | The sequence offset value                                                     |
-| loop     | false    | bool, null or Array | An array defining [start, end] loop points in ticks, or false/null to disable |
+| Name         | Default  | Type                | Description                                                                              |
+| ------------ | -------- | ------------------- | ---------------------------------------------------------------------------------------- |
+| seq          | []       | Array               | The sequence of values to generate                                                       |
+| offset       | 0        | number              | The sequence offset value                                                                |
+| loop         | false    | bool, null or Array | An array defining [start, end] loop points in ticks, or false/null to disable            |
+| interpolate  | 0        | number              | Pass 1 for linear interpolation between values, 0 for no interpolation (hold)            |
+| tickInterval | 0        | number              | Approximate period of the input signal `t` in seconds. Improves interpolation resolution |
 

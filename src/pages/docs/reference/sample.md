@@ -2,11 +2,10 @@
 sidebar_label: el.sample
 ---
 
-# el.sample([props], t, rate)
-
+# el.sample(props, t, rate)
 
 Loads a sample from the [virtual file system](../guides/Virtual_File_System.md) and triggers its playback on the rising edge of an incoming
-pulse train. Expects two children: first the pulse train to trigger playback, and second a
+pulse train. Expects a props arg and then two children: first the pulse train to trigger playback, and second a
 signal which continuously directs the sample's playback rate. For example,
 
 ```js

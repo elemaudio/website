@@ -2,7 +2,7 @@
 sidebar_label: el.scope
 ---
 
-# el.scope([props], x, [y, [...]])
+# el.scope(props, x, [y, [...]])
 
 A pass-through node which buffers its incoming signal(s), and reports them to the
 JavaScript environment through the core Renderer event emitting interface.

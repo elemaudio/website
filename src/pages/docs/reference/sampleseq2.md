@@ -1,4 +1,4 @@
-# el.sampleseq([props], t)
+# el.sampleseq(props, t)
 
 The `sampleseq2` is equivalent to [`el.sampleseq`](./sampleseq), except that it adds the
 ability for pitch shifting and time stretching the source sample.

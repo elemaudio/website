@@ -2,10 +2,10 @@
 sidebar_label: el.tapIn
 ---
 
-# el.tapIn([props])
+# el.tapIn(props)
 
-See the description for the tapOut node above. Given a tapOut node with a known name
-in a signal graph, we can use tapIn node to wire the signal into any other region of our graph,
+See the description for the [tapOut node](./tapOut.md). Given a tapOut node with a known name
+in a signal graph, we can use the tapIn node to wire the signal into any other region of our graph,
 allowing feedback around arbitrary subgraphs. A simple feedback loop might be implemented
 as follows:
 

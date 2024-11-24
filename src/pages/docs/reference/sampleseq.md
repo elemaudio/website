@@ -1,4 +1,4 @@
-# el.sampleseq([props], t)
+# el.sampleseq(props, t)
 
 The `sampleseq` node is similar in spirit to the [`sparseq2`](./sparseq2), but for sequencing
 sample playback over time.

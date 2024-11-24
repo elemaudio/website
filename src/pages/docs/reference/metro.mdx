@@ -3,7 +3,7 @@ sidebar_label: el.metro
 ---
 import { Callout } from 'nextra/components'
 
-# el.metro([props])
+# el.metro(props)
 
 <Callout type="info">
   Only available in the WASM-based renderers (web-renderer, offline-renderer). You may extend the runtime
@@ -32,7 +32,8 @@ In this example, we start with a pulse train running at 5Hz. We then introduce a
 train running at 10Hz without altering the train at 5Hz, and at an unsynchronized time
 determined by the `setTimeout` timer duration. We know in this example that the second
 train will run exactly twice as fast as the first, but we can't guarantee here that they
-will ever share a synchronized rising edge in time.
+will ever share a synchronized rising edge in time because the latter gets created and starts
+running after the former has already started.
 
 Alternatively, consider this example:
 

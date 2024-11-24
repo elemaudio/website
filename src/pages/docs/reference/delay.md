@@ -2,9 +2,9 @@
 sidebar_label: el.delay
 ---
 
-# el.delay([props], len, fb, x)
+# el.delay(props, len, fb, x)
 
-A variable-length delay line with a feedback component. Expects three children:
+A variable-length delay line with a feedback component. Expects a props arg followed by three children:
 
 1. The delay time in samples
 2. A feedback coefficient on the range [-1, 1]

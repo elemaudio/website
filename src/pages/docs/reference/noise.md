@@ -8,4 +8,7 @@ Generates a stream of random numbers uniformly distributed on the range [-1, 1].
 
 #### Props
 
-None
+| Name     | Default   | Type   | Description                            |
+| -------- | --------- | -------|--------------------------------------- |
+| seed     | undefined | Number | Seed the underlying prng               |
+

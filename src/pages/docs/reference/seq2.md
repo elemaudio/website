@@ -2,7 +2,7 @@
 sidebar_label: el.seq2
 ---
 
-# el.seq2([props], t, reset)
+# el.seq2(props, t, reset)
 
 A simple signal sequencer. Receives a sequence of values from the `seq` property
 and steps through them on each rising edge of an incoming pulse train. Expects two children, first

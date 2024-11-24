@@ -2,7 +2,7 @@
 sidebar_label: el.sdelay
 ---
 
-# el.sdelay([props], x)
+# el.sdelay(props, x)
 
 A static delay line with a fixed length. Expects exactly one child: the input signal to delay.
 This utility offers a subset of the functionality of the standard `el.delay`, but can be used as

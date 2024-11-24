@@ -16,8 +16,3 @@ el.select(0, a, b); // Equivalent to `b`
 el.select(el.train(1), a, b); // Constantly switching between `a` and `b`
 el.select(el.sm(el.train(1)), a, b); // Constantly fading between `a` and `b`
 ```
-
-#### Props
-
-None
-

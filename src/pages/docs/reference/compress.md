@@ -21,7 +21,3 @@ let drumBus = el.add(kick, hat, snare, cymbals);
 // signal and as the signal to filter
 let out = el.compress(10, 100, -48, 4, drumBus, drumBus);
 ```
-
-#### Props
-
-None

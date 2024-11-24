@@ -2,7 +2,7 @@
 sidebar_label: el.meter
 ---
 
-# el.meter([props], x)
+# el.meter(props, x)
 
 A pass-through node which analyses its incoming signal, measuring the
 maximum and minimum peak value each block. The result is emitted through the
