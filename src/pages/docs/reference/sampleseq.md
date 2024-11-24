@@ -32,7 +32,7 @@ the above example into one node, so that if our input time does jump around, we 
 reposition the playhead within the sample buffer that we're playing.
 
 ```js
-let seq = el.sampleseq({
+let sequencedSample = el.sampleseq({
   seq: [
     { time: 0.0, value: 1 },
     { time: 0.5, value: 0 },
@@ -42,8 +42,6 @@ let seq = el.sampleseq({
   path,
   duration: 4,
 }, el.div(el.time(), el.sr()));
-
-let sequencedSample = el.sample({path}, seq, 1);
 ```
 
 So `sampleseq` expects a sparsely defined sequence given as an array of `{ time,

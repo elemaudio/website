@@ -1,10 +1,10 @@
-# el.sampleseq(props, t)
+# el.sampleseq2(props, t)
 
 The `sampleseq2` is equivalent to [`el.sampleseq`](./sampleseq), except that it adds the
 ability for pitch shifting and time stretching the source sample.
 
 ```js
-let seq = el.sampleseq({
+let sequencedSample = el.sampleseq2({
   seq: [
     { time: 0.0, value: 1 },
     { time: 0.5, value: 0 },
@@ -16,8 +16,6 @@ let seq = el.sampleseq({
   shift: 7,
   stretch: 2,
 }, el.div(el.time(), el.sr()));
-
-let sequencedSample = el.sample({path}, seq, 1);
 ```
 
 Like `sampleseq`, `sampleseq2` expects a sparsely defined sequence given as an array of `{ time,
