@@ -138,15 +138,79 @@ delay buffers or sample readers.
 void reset();
 ```
 
-### updateSharedResourceMap
+### gc
 
-Loads a shared buffer into memory.
+Step the internal garbage collection algorithm to clean up any unused nodes.
+
+This method returns a set of NodeIds identifying any nodes that were actually cleaned
+up during the pass.
+
+```cpp
+std::set<NodeId> gc();
+```
+
+**Note:** Garbage collection is initiated at the native layer with this method, and the IDs returned
+must be passed to the corresponding `prune` method on the `Renderer` instance associated with this Runtime instance
+to ensure the Renderer and the Runtime remain in sync.
+
+As an example, the `OfflineRenderer` exposes a `gc()` method that coordinates between its own internal wasm Runtime
+instance and its internal Renderer instance as follows,
+
+```js
+class OfflineRenderer {
+  // ... omitted
+
+  gc() {
+    let pruned = this._native.gc();
+    this._renderer.prune(pruned);
+    return pruned;
+  }
+
+  // ... omitted
+}
+```
+
+### addSharedResource
+
+Loads a new shared buffer into memory.
 
 This method populates an internal map from which any GraphNode can request a
 shared pointer to the data. This, for example, is how `el.sample` resolves its `path` property.
 
 ```
-void updateSharedResourceMap(std::string const& name, FloatType const* data, size_t size);
+bool addSharedResourceMap(std::string const& name, std::unique_ptr<elem::SharedResource> resource);
+```
+
+Returns false if the insertion failed (i.e. if the provided `name` was already taken during a prior insertion), and true otherwise.
+
+You may derive your own SharedResource type by inheriting the `elem::SharedResource` interface for custom
+behavior. There is an existing `AudioBufferResource` provided for the default use case:
+
+```cpp
+auto resource = std::make_unique<elem::AudioBufferResource>(audioChannelData, numChannels, numSamples);
+auto result = runtime->addSharedResource(name, std::move(resource));
+```
+
+### pruneSharedResources
+
+Removes and deallocates any unused shared resources in the internal resource map.
+
+This method will retain any resource with references held by any node in the audio graph,
+so it may be helpful to run a `gc()` pass before pruning resources to make sure unused nodes
+don't prevent the cleanup of a particular resource by maintaining their reference.
+
+```
+void pruneSharedResources();
+```
+
+### pruneSharedResources
+
+Returns an iterator through the names of the entries in the shared resoure map.
+
+Intentionally, this does not provide access to the values in the map.
+
+```cpp
+SharedResourceMap::KeyViewType getSharedResourceMapKeys();
 ```
 
 ### registerNodeType

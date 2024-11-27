@@ -67,7 +67,7 @@ public:
 
     void process (elem::BlockContext<float> const& ctx) override
     {
-        std::fill_n(ctx.outputData, ctx.numSamples, value.load())
+        std::fill_n(ctx.outputData[0], ctx.numSamples, value.load())
     }
 
     std::atomic<float> value { 0 };
@@ -83,14 +83,14 @@ struct BlockContext
 {
     FloatType const** inputData;
     size_t numInputChannels;
-    FloatType* outputData;
+    FloatType** outputData;
+    size_t numOutputChannels;
     size_t numSamples;
     void* userData;
 };
 ```
 
-Notice in particular that there is exactly 1 output channel (all Elementary nodes emit single-channel signals), and that the
-opaque `userData` pointer is passed through from your higher level call to `elem::Runtime<FloatType>::process`. This allows you
+Note that the opaque `userData` pointer is passed through from your higher level call to `elem::Runtime<FloatType>::process`. This allows you
 to pass host-level information through your audio graph, and for your custom node instances to act upon it. A typical use case
 for this feature might be passing current time information (say, `ppqn` position from a host DAW) so that your custom nodes
 might emit host-synced LFO signals.
