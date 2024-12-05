@@ -115,7 +115,7 @@ See [Using Refs](../guides/Using_Refs).
 ### updateVirtualFileSystem
 
 ```js
-core.updateVirtualFileSystem(Object<string, Array | Float32Array>);
+core.updateVirtualFileSystem(Object<string, Array<Float32Array> | Float32Array>);
 ```
 
 Use this method to dynamically update the buffers available in the virtual file system after initialization. See the
@@ -187,7 +187,7 @@ await core.initialize(ctx, {
   numInputChannels: 0,
   numOutputChannels: 2,
   virtualFileSystem: {
-    '/your/virtual/file.wav': (new Float32Array(512)).map(() => Math.random()),
+    '/your/virtual/file.wav': (new Float32Array(512)).map(() => Math.random() - 0.5),
   }
 });
 ```
@@ -232,8 +232,5 @@ core.render(el.sample({path: '/some/new/arbitrary/fileName.wav'}, el.train(1)))
 // Process again; this will overwrite what's already in `out`
 core.process(inps, outs);
 ```
-
-Note: Each virtual file system entry maps to a single channel of audio data. To load multi-channel sample
-data into the virtual file system, you should enumerate each channel as a differently named virtual file path.
 
 For more information, see [Virtual File System](../guides/Virtual_File_System.md).

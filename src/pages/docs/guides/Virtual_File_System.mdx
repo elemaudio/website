@@ -3,30 +3,27 @@ import { Callout } from 'nextra/components'
 # Virtual File System (VFS)
 
 Elementary uses the notion of a virtual file system to coordinate audio processing nodes
-which have dependencies on large, static audio buffers. A common example is the `el.sample`
+which have dependencies on large, static shared resources. A common example is the `el.sample`
 node which manages playback of an audio sample, or `el.table` which performs an interpolated
 read from a lookup table. Using the virtual file system enables internal shared memory optimizations
 and allows the audio processing nodes to remain lightweight.
 
 <Callout type="info">
   While we refer to this feature as a virtual "file system," it's really just a flat storage object
-  which maps from an arbitrary string name (key) to a single-channel buffer of audio data (value).
-
-  In future versions, the API naming may be updated to reflect this. The native C++ interface already
-  refers to the same feature as a "shared resource map."
+  which maps from an arbitrary string name (key) to a particular resource (value).
 </Callout>
 
 ## Loading data into the VFS
 
 The process for loading data into the virtual file system depends on how you're using Elementary, although
 the concept is the same everywhere: you add key-value entries to the virtual file system map, where the key is
-a "virtual file path" or simply a name of your choosing, and the value is an audio buffer, and then you build
+a "virtual file path" or simply a name of your choosing, and the value is the resource, and then you build
 your audio graph by referencing the associated name or virtual file path of the buffer you want to use.
 
 If you're working strictly in JavaScript with one of the provided renderers, consult the documentation
 for your specific renderer on adding entries to the VFS.
 
-If you're working with the C++ API, see [`elem::Runtime<FloatType>::updateSharedResourceMap`](./Native_Integrations#updatesharedresourcemap). For
+If you're working with the C++ API, see [`elem::Runtime<FloatType>::addSharedResource`](./Native_Integrations#addsharedresource). For
 your custom integrations, it may be worth establishing a dedicated message or FFI to allow your scripting environment to make calls to this native
 method. This is exactly how the provided renderers offer their VFS APIs.
 
@@ -43,32 +40,36 @@ let res = await fetch('https://ia800407.us.archive.org/9/items/999WavFiles/10.mp
 let sampleBuffer = await ctx.decodeAudioData(await res.arrayBuffer());
 
 core.updateVirtualFileSystem({
-  'sample0': sampleBuffer.getChannelData(0),
+  'sample0': [
+    sampleBuffer.getChannelData(0),
+    sampleBuffer.getChannelData(1),
+  ],
 });
 ```
+
 or equivalently:
 
 ```cpp
-std::vector<float> myAudioBuffer (...);
-runtime->updateSharedResourceMap("sample0", myAudioBuffer.data(), myAudioBuffer.size());
+auto resource = std::make_unique<elem::AudioBufferResource>(audioChannelData, numChannels, numSamples);
+auto result = runtime->addSharedResource("sample0", std::move(resource));
 ```
 
 Now we should be ok to render an audio graph which references `sample0` from one of the appropriate nodes:
 
-```
+```js
 // In our JavaScript environment somewhere
 core.render(el.sample({path: 'sample0'}, 1, 1));
 ```
 
 ## Inspecting
 
-As of v2.1.0, you can now use the `listVirtualFileSystem()` method on the web and offline renderers, or equivalently the `getSharedResourceMapKeys()` method on the `elem::Runtime<FloatType>` interface, to list by name the contents of shared map. This API intentionally does
-not share access to the underlying buffers to ensure immutability and thread safety.
+The `listVirtualFileSystem()` method on the web and offline renderers, or equivalently the `getSharedResourceMapKeys()` method on the `elem::Runtime<FloatType>` interface,
+will list by name the contents of shared map. This API intentionally does not share access to the underlying buffers to ensure immutability and thread safety.
 
 ## Pruning
 
-As of v2.1.0, you can also now use the `pruneVirtualFileSystem()` method on the web and offline renderers, or equivalently the `pruneSharedResourceMap()` method on the `elem::Runtime<FloatType>` interface, to remove contents from the shared map that are not actively being used
-by any of the processing graph.
+The `pruneVirtualFileSystem()` method on the web and offline renderers, or equivalently the `pruneSharedResourceMap()` method on the `elem::Runtime<FloatType>` interface,
+will remove contents from the shared map that are not actively being used by any of the processing graph.
 
 ## With Custom Native Nodes
 

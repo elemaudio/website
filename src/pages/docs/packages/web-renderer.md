@@ -107,7 +107,7 @@ See [Using Refs](../guides/Using_Refs).
 ### updateVirtualFileSystem
 
 ```js
-core.updateVirtualFileSystem(Object<string, Array | Float32Array>): Promise<bool>;
+core.updateVirtualFileSystem(Object<string, Array<Float32Array> | Float32Array>): Promise<bool>;
 ```
 
 Use this method to add new buffers to the virtual file system after initialization. Returns a promise which
@@ -181,9 +181,9 @@ let node = await core.initialize(ctx, {
   numberOfOutputs: 1,
   outputChannelCount: [2],
   processorOptions: {
-    // Maps from String -> Array|Float32Array
+    // Maps from String -> Array<Float32Array> | Float32Array
     virtualFileSystem: {
-      '/your/virtual/file.wav': (new Float32Array(512)).map(() => Math.random()),
+      '/your/virtual/file.wav': (new Float32Array(512)).map(() => Math.random() - 0.5),
     }
   }
 });
@@ -205,15 +205,15 @@ let res = await fetch('https://ia800407.us.archive.org/9/items/999WavFiles/10.mp
 let sampleBuffer = await ctx.decodeAudioData(await res.arrayBuffer());
 
 core.updateVirtualFileSystem({
-  '/some/new/arbitrary/fileName.wav': sampleBuffer.getChannelData(0),
+  '/some/new/arbitrary/fileName.wav': [
+    sampleBuffer.getChannelData(0),
+    sampleBuffer.getChannelData(1),
+  ]
 });
 
 // In this example, after performing the update, we can now `render()` a new graph which references
 // our new file data.
-core.render(el.sample({path: '/some/new/arbitrary/fileName.wav'}, el.train(1)))
+core.render(...el.mc.sample({path: '/some/new/arbitrary/fileName.wav', channels: 2}, el.train(1)))
 ```
-
-Note: Each virtual file system entry maps to a single channel of audio data. To load multi-channel sample
-data into the virtual file system, you should enumerate each channel as a differently named virtual file path.
 
 For more information, see [Virtual File System](../guides/Virtual_File_System.md).
