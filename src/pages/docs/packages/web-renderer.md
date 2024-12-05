@@ -158,6 +158,16 @@ core.reset(): Promise<void>;
 
 Resets internal nodes and buffers back to their initial state.
 
+### gc
+
+```js
+core.gc(): Promise<number[]>;
+```
+
+Runs the internal garbage collection algorithm to destroy unused graph nodes and release their memory.
+
+Returns an array containing the set of graph node Ids that were removed.
+
 ## Events
 
 Each `WebRenderer` instance is itself an event emitter with an API matching that of the [Node.js Event Emitter](https://nodejs.org/api/events.html#class-eventemitter)

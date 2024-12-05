@@ -150,7 +150,7 @@ std::set<NodeId> gc();
 ```
 
 **Note:** Garbage collection is initiated at the native layer with this method, and the IDs returned
-must be passed to the corresponding `prune` method on the `Renderer` instance associated with this Runtime instance
+must be passed to the corresponding [`prune`](../packages/core#rendererprune) method on the `Renderer` instance associated with this Runtime instance
 to ensure the Renderer and the Runtime remain in sync.
 
 As an example, the `OfflineRenderer` exposes a `gc()` method that coordinates between its own internal wasm Runtime
