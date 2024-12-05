@@ -29,9 +29,10 @@ class MyCustomNode : public elem::GraphNode<float> {
 public:
     using elem::GraphNode<float>::GraphNode;
 
-    void setProperty(std::string const& key, elem::js::Value const& val) override
+    int setProperty(std::string const& key, elem::js::Value const& val) override
     {
         // TODO
+        return elem::ReturnCode::Ok();
     }
 
     void process (elem::BlockContext<float> const& ctx) override
@@ -130,4 +131,4 @@ inputs will be served to your custom node instance as input buffer data in `elem
 
 ## API
 
-For a complete and current enumeration of the `elem::GraphNode<FloatType>` API, please see [GraphNode.h](https://github.com/elemaudio/elementary/blob/main/runtime/GraphNode.h).
+For a complete and current enumeration of the `elem::GraphNode<FloatType>` API, please see [GraphNode.h](https://github.com/elemaudio/elementary/blob/main/runtime/elem/GraphNode.h).
