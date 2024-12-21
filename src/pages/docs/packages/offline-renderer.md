@@ -44,7 +44,7 @@ import OfflineRenderer from '@elemaudio/offline-renderer';
 ## Usage
 
 ```js
-import Offline from '@elemaudio/offline-renderer';
+import OfflineRenderer from '@elemaudio/offline-renderer';
 ```
 
 ### Constructor
