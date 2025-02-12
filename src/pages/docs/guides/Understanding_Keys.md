@@ -1,10 +1,10 @@
 # Understanding Keys
 
-This guide assumes that you've already read the [In Depth](../In_Depth) introduction to Elementary,
+This guide assumes that you've already read the [In Depth](../in_depth) introduction to Elementary,
 and picks up where the In Depth introduction leaves off when it references keys.
 
 If your application only ever makes a single call to `core.render`, then this section won't
-really apply, and in such a case the behavior is well explained in [In Depth](../In_Depth).
+really apply, and in such a case the behavior is well explained in [In Depth](../in_depth).
 However, audio applications frequently exhibit dynamic behavior, and it's in this context that
 we'll explore what happens when you make multiple successive calls to `core.render`.
 
