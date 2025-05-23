@@ -144,7 +144,7 @@ node in the graph.
 ### setCurrentTimeMs
 
 ```js
-core.setCurrentTime(t): Promise<void>;
+core.setCurrentTimeMs(t): Promise<void>;
 ```
 
 Sets the current engine time to `t`, given in milliseconds. This immediately changes the output of any `el.time()`
