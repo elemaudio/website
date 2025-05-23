@@ -60,7 +60,7 @@
   "snapshot": "el.snapshot",
   "sparseq": "el.sparseq",
   "sparseq2": "el.sparseq2",
-  "sphasor": "el.sphasor",
+  "syncphasor": "el.syncphasor",
   "square": "el.square",
   "sr": "el.sr",
   "svf": "el.svf",
