@@ -64,7 +64,7 @@ in this process of building your graph.
 ## Renderer
 
 The second major component of building an Elementary Audio application is understanding what happens during the render process.
-Elementary offers multiple different renderers for the available platforms: web, Node.js, audio plugins, etc.
+Elementary offers multiple different renderers for the available platforms: web, Node.js, audio plugins, Swift apps, etc.
 Each renderer, though targeting a different platform, shares the same principles and methodology. This methodology is what we'll
 discuss here, and if you're coming to Elementary with a background in web programming, this section will feel a lot like the
 idea of rendering in React.js. For specifics on the subtle differences between each renderer, consult the relevant package documentation.
@@ -133,6 +133,8 @@ similarities and differences between the new graph and the one that's currently 
 a series of optimizations to ensure that the graph that actually makes noise is highly efficient. As the renderer
 reconciles the two graphs, it precisely applies _only_ the required changes to the underlying platform to ensure
 that what you're hearing reflects the new graph that you've described.
+
+<!-- TODO: Add a note about how the native renderer is 100x faster and is available for compiled languages. Include benchmark metrics for javascript and native and explain why it is okay, i.e. you can use keys and stuff but even still it's so fast and the realtime thread just picks it up when it is ready so it doesn't interrupt the audio graph at all, and you are unlikely to need to change the audio graph at these high speeds anyway because you are probably just changing consts which you can change with keys. Something like that -->
 
 At this point, you may be wondering, how can this possibly be efficient or high performance? The answer lies in
 the fact that nothing we've discussed so far actually does any of the realtime native audio processing. The graphs

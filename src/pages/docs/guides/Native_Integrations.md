@@ -1,10 +1,11 @@
 # Native Integrations
-
-By design, Elementary's native audio engine aims to easily fit into your audio
+By design, Elementary's native renderer and audio engine aim to easily fit into your audio
 processing stack to take on as much or as little of the processing responsibilities
-as you want. The engine can be embedded independently of any JavaScript
+as you want. The renderer and engine can be embedded independently of any JavaScript
 processing, through a quick series of CMake and C++ steps which we
 outline here.
+
+Additionally, the native renderer and lib functions can be used to create language bindings for Elementary in other languages without re-implementing the Renderer logic.
 
 ## CMake
 
@@ -24,19 +25,57 @@ add_subdirectory(elementary/runtime)
 target_link_libraries(${TARGET_NAME} PRIVATE runtime)
 ```
 
-
 ## C++
 
-Now that we've got the dependency in place, we can make an instance of the `elem::Runtime<FloatType>`. This Runtime
-instance is typically the only piece of the Elementary native engine that you need to pay any attention to, and using
-it properly only involves a handful of steps:
+Now that we've got that dependency in place, we can make use of the following classes:
+1. `elem::Runtime<FloatType>` for _processing_ the audio graph.
+2. `elem::Renderer<FloatType>` for _rendering_ the audio graph via Elementary lib functions in the `elem::lib` namespace. You can use this renderer instead of the JavaScript renderer when you are working in a native application.
+
+These two classes are typically the only pieces of the Elementary native engine that you need to pay any attention to, and using them properly only involves a handful of steps:
+
+1. Create the Runtime instance with your desired float type (`float` or `double`), sample rate, and block size
+2. Create a Renderer instance and give it a reference to your Runtime
+3. Process audio on the real-time thread (or wherever you need)
+4. (Optional) Process events periodically on the main thread
+5. Call `Renderer::renderGraph(...)` whenever you want to make changes to the audio graph
+
+Here is an example of a simple C++ program which renders a simple graph and processes a block of audio on the main thread.
+
+```cpp
+#include <lib/Oscillators.h>
+#include <Runtime.h>
+
+int main(int argc, char** argv) {
+    auto runtime = std::make_shared<elem::Runtime<float>>(44100.0, 512);
+    auto renderer = Renderer<float>(runtime);
+
+    renderer.renderGraph({elem::lib::cycle(440.0), elem::lib::cycle(440.0)});
+
+    // And finally we can process some audio data
+    runtime.process(
+        inputBufferData,
+        numInputChannels,
+        outputBufferData,
+        numOutputChannels,
+        blockSize,
+        nullptr, // userData
+    );
+
+    return 0;
+}
+```
+
+This example is an abbreviated example of the `elemcli-native` command line tool available [in the Github repository](https://github.com/elemaudio/elementary/tree/main/cli-native).
+
+### Using the Runtime with the JavaScript API
+If you would like to integrate with a javascript environment instead of using the native renderer, you could do it like this:
 
 1. Create the Runtime instance with your desired float type (`float` or `double`), sample rate, and block size
 2. Set up a message passing interface to receive instructions from your JavaScript environment and apply them to the runtime
 3. Process audio on the real-time thread (or wherever you need)
 4. (Optional) Process events periodically on the main thread
 
-As an example, here we'll show a simple C++ program which runs the Runtime instance next to an embedded JavaScript engine
+As an example, here we'll show another simple C++ program which runs the Runtime instance next to an embedded JavaScript engine
 thanks to CHOC's Quickjs wrapper. We wire in a native interop method for receiving instructions from the JavaScript engine,
 then evaluate some JavaScript, and finally process a couple blocks of audio on the main thread.
 
@@ -74,7 +113,17 @@ int main(int argc, char** argv) {
 }
 ```
 
-This example is an abbreviated example of the command line tool available [in the Github repository](https://github.com/elemaudio/elementary/tree/main/cli).
+This example is an abbreviated example of the `elemcli` command line tool available [in the Github repository](https://github.com/elemaudio/elementary/tree/main/cli).
+
+## Creating bindings for C++ compatible compiled languages
+Using the native Renderer and Elementary lib functions, creating bindings for a compiled language becomes relatively straightforward. You simply need to create a wrapper around the `elem::Runtime<FloatType>` and `elem::Renderer<FloatType>` classes, and functions to wrap the `elem::lib` library of Elementary node functions so that consumers of the package can construct their audio graph and pass it to the Renderer. Then, they can set up the Runtime and call its process method from the realtime audio thread in a manner appropriate to the given platform.
+
+See [Elementary Swift](https://github.com/parkernilson/elementary-swift) or any of the other bindings in [Other Languages](../other_languages/community-supported-language-bindings.md) for examples of how this can be done.
+
+## A note on the JavaScript Renderer vs Native Renderer
+Since the javascript renderer (see [@elemaudio/web-renderer](../packages/web-renderer.md)) expresses its declarative API through JavaScript, the renderer and graph reconciliation algorithm were built in the JavaScript layer to minimize the amount of data passed through the JavaScript <-> C++ boundary (which involves serialization and deserialization of large JSON data). For example, in the case where a single keyed constant leaf node changes its value, only a single setProperty instruction needs to be sent across the boundary to the Runtime, which is far more efficient than sending the entire virtual audio graph representation.
+
+However, in use cases where the app logic is written in a compiled language capable of including C++ code, we do not have that limitation. Therefore, the Native Renderer is provided so that each new language binding does not have to re-implement the Renderer and node library.
 
 ## Runtime API
 
@@ -114,6 +163,20 @@ void process(
     size_t numOutputChannels,
     size_t numSamples,
     void* userData = nullptr);
+```
+
+### findNode
+Find a node in the current node table. Used by the Renderer to reconcile the requested audio graph state with the current audio graph state.
+
+Returns a `nullptr` if the node is not found.
+```cpp
+GraphNode<FloatType> const* Runtime<FloatType>::findNode(NodeId const& id)
+```
+
+### getCurrentRoots
+Returns a set containing the hashes of the currently active roots. Used by the reconciliation algorithm to determine which roots to activate.
+```cpp
+const std::set<NodeId>& Runtime<FloatType>::getCurrentRoots()
 ```
 
 ### processQueuedEvents
@@ -231,3 +294,40 @@ using NodeFactoryFn = std::function<std::shared_ptr<GraphNode<FloatType>>(NodeId
 void registerNodeType (std::string const& type, NodeFactoryFn && fn);
 ```
 
+## Renderer API
+### Constructor
+```cpp
+Rendererer(std::shared_ptr<Runtime> runtime);
+```
+
+### renderGraph
+Renders a graph of `std::shared_ptr<NodeRepr>` (each with children: `std::vector<std::shared_ptr<NodeRepr>>`). These graphs can be created with the Elementary lib functions in namespace `elem::lib` which are the C++ implementation of the JavaScript lib functions.
+
+```cpp
+struct RenderOptions {
+    int32_t fadeInMs = 20;
+    int32_t fadeOutMs = 20;
+};
+
+struct RenderResult {
+    int result = 0;
+    int32_t nodesAdded = 0;
+    int32_t edgesAdded = 0;
+    int32_t propsWritten = 0;
+    double elapsedTimeMs = 0.0;
+};
+
+RenderResult renderGraph(std::vector<std::shared_ptr<NodeRepr>> graphs, RenderOptions options = {});
+```
+
+### createRef
+C++ implementation of [createRef](../guides/Using_Refs.md).
+
+```cpp
+struct NodeRef {
+    std::shared_ptr<NodeRepr> node;
+    std::function<RenderResult(js::Object newProps)> setter;
+};
+
+NodeRef createRef(std::string kind, js::Object props, std::vector<std::shared_ptr<NodeRepr>> children);
+```
