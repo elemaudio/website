@@ -64,7 +64,7 @@ in this process of building your graph.
 ## Renderer
 
 The second major component of building an Elementary Audio application is understanding what happens during the render process.
-Elementary offers multiple different renderers for the available platforms: web, Node.js, audio plugins, etc.
+Elementary offers multiple different renderers for the available platforms: web, Node.js, audio plugins, Swift apps, etc.
 Each renderer, though targeting a different platform, shares the same principles and methodology. This methodology is what we'll
 discuss here, and if you're coming to Elementary with a background in web programming, this section will feel a lot like the
 idea of rendering in React.js. For specifics on the subtle differences between each renderer, consult the relevant package documentation.

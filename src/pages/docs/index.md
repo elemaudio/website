@@ -1,5 +1,4 @@
 # Introduction
-
 [**Elementary**](https://elementary.audio) is a JavaScript library for digital audio signal processing that
 aims to make the process of writing audio software faster and more intuitive while producing high quality, resilient code.
 
@@ -9,6 +8,8 @@ aims to make the process of writing audio software faster and more intuitive whi
 
 To best understand Elementary, we recommend reading [Motivation](../docs/motivation), followed by [In Depth](../docs/in_depth). If you want to skip ahead
 and get started, read on below.
+
+Elementary also has community supported bindings for languages other than JavaScript in [Other Languages](../docs/other_languages/community-supported-language-bindings.md).
 
 ## Getting Started
 
@@ -20,6 +21,7 @@ If you're new to the project, we recommend studying the following workflows to g
 
 * Use the [@elemaudio/web-renderer](../docs/packages/web-renderer) package with your favorite frontend UI library to make an audio web application
 * Use the [@elemaudio/offline-renderer](../docs/packages/offline-renderer) package with Node.js for static file processing
+* Use the [elementary-swift](https://github.com/parkernilson/elementary-swift) package to develop an iOS or macOS application
 
 Once you're ready to dive in, we suggest starting with one of these ideas:
 
