@@ -134,8 +134,6 @@ a series of optimizations to ensure that the graph that actually makes noise is 
 reconciles the two graphs, it precisely applies _only_ the required changes to the underlying platform to ensure
 that what you're hearing reflects the new graph that you've described.
 
-<!-- TODO: Add a note about how the native renderer is 100x faster and is available for compiled languages. Include benchmark metrics for javascript and native and explain why it is okay, i.e. you can use keys and stuff but even still it's so fast and the realtime thread just picks it up when it is ready so it doesn't interrupt the audio graph at all, and you are unlikely to need to change the audio graph at these high speeds anyway because you are probably just changing consts which you can change with keys. Something like that -->
-
 At this point, you may be wondering, how can this possibly be efficient or high performance? The answer lies in
 the fact that nothing we've discussed so far actually does any of the realtime native audio processing. The graphs
 that we're building and discussing here are extremely lightweight, virtual representations of the desired process.
